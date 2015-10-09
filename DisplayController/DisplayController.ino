@@ -12,11 +12,13 @@
 void setup() {
   serial_setup();
   radio_setup();
+  ecam_setup();
 }
 
 void loop() {
   read_serial();
   radio_tick();
+  ecam_tick();
 }
 
 
