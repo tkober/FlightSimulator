@@ -3,6 +3,14 @@
 #include "SimConnectInputs.h"
 
 
+void print_radio();
+void print_label();
+void print_frequncies();
+void print_active_frequency();
+void print_standby_frequency();
+void change_frequency();
+
+
 #define COM1_LABEL    "ACT   COM1   S/B"
 #define COM2_LABEL    "ACT   COM2   S/B"
 #define NAV1_LABEL    "ACT   NAV1   S/B"
@@ -50,14 +58,14 @@ void radio_setup() {
   pinMode(SWAP_FREQUENCY_PIN, INPUT);
   
   radio_lcd.begin(RADIO_LCD_COL_COUNT, RADIO_LCD_ROW_COUNT);
-  printRadio();
+  print_radio();
 }
 
 
 void radio_tick() {
   if (digitalRead(SWAP_FREQUENCY_PIN) == 1) {
     if (isSwapFrequencyButtonPressed == 0) {
-      Serial.println(SWAP_NAV1);
+      change_frequency();
     }
     isSwapFrequencyButtonPressed = 1;
   } else {
@@ -75,7 +83,7 @@ void radio_tick() {
   }
 
   if (radio_updated == 1) {
-    printRadio();
+    print_radio();
     radio_updated = 0;
   }
 }
@@ -123,14 +131,14 @@ void read_nav2_sb_freq(char token) {
 
 // Private
 
-void printRadio() {
+void print_radio() {
   radio_lcd.clear();
-  printLabel();
-  printFrequncies();
+  print_label();
+  print_frequncies();
 }
 
 
-void printLabel() {
+void print_label() {
   char *label;
   switch (currentRadio) {
     case COM1:
@@ -154,16 +162,16 @@ void printLabel() {
 }
 
 
-void printFrequncies() {
+void print_frequncies() {
   radio_lcd.setCursor(0, 1);
-  printActiveFrequency();
+  print_active_frequency();
   radio_lcd.write("<");
   radio_lcd.write(">");
-  printStandbyFrequency();
+  print_standby_frequency();
 }
 
 
-void printActiveFrequency() {
+void print_active_frequency() {
   char *frequency;
   switch (currentRadio) {
     case COM1:
@@ -187,7 +195,7 @@ void printActiveFrequency() {
 }
 
 
-void printStandbyFrequency() {
+void print_standby_frequency() {
   char *frequency;
   switch (currentRadio) {
     case COM1:
@@ -209,3 +217,27 @@ void printStandbyFrequency() {
       break;
   }
 }
+
+
+void change_frequency() {
+  char *code = "";
+  switch (currentRadio) {
+    case COM1:
+      code = SWAP_COM1;
+      break;
+
+    case COM2:
+      code = SWAP_COM2;
+      break;
+
+    case NAV1:
+      code = SWAP_NAV1;
+      break;
+
+    case NAV2:
+      code = SWAP_NAV2;
+      break;
+  }
+  Serial.println(code);
+}
+
