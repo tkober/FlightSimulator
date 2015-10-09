@@ -1,6 +1,7 @@
 #include "Radio.h"
 #include "SerialReader.h"
 #include "SimConnectInputs.h"
+#include "Glyphs.h"
 
 
 void print_radio();
@@ -16,11 +17,14 @@ void change_frequency();
 #define NAV1_LABEL    "ACT   NAV1   S/B"
 #define NAV2_LABEL    "ACT   NAV2   S/B"
 
-#define SWAP_FREQUENCY_PIN  9
-#define CHANGE_RADIO_PIN    8
+#define SWAP_FREQUENCY_PIN    9
+#define CHANGE_RADIO_PIN      8
 
-#define RADIO_LCD_ROW_COUNT 2
-#define RADIO_LCD_COL_COUNT 16
+#define RADIO_LCD_ROW_COUNT   2
+#define RADIO_LCD_COL_COUNT   16
+
+#define RADIO_CALL_GLYH_INDEX 0
+#define RADIO_CALL_GLYH       byte(RADIO_CALL_GLYH_INDEX)
 
 enum Radio {
   COM1 = 0,
@@ -56,7 +60,8 @@ int isChangeRadioButtonPressed = 0;
 void radio_setup() {
   pinMode(CHANGE_RADIO_PIN, INPUT);
   pinMode(SWAP_FREQUENCY_PIN, INPUT);
-  
+
+  radio_lcd.createChar(RADIO_CALL_GLYH_INDEX, CALL_GLYPH);
   radio_lcd.begin(RADIO_LCD_COL_COUNT, RADIO_LCD_ROW_COUNT);
   print_radio();
 }
