@@ -1,3 +1,5 @@
+// Call
+
 byte CALL_GLYPH[8] = {   
   B00010,         
   B01001,         
@@ -8,6 +10,8 @@ byte CALL_GLYPH[8] = {
   B00010,         
 };                 
 
+
+// Flaps
 
 byte FLAP_NODE_TOP[8] = {
   B11111,
@@ -94,5 +98,73 @@ byte FLAP_EDGE_DOWNWARD_2[8] = {
   B11000,
   B00111,
   B00000,
+};
+
+
+// Spoilers
+
+byte SPOILER_BOTTOM_RETRACTED[8] = {
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B11111,
+};
+
+
+byte SPOILER_BOTTOM_1[8] = {
+  B00000,
+  B00000,
+  B00100,
+  B01110,
+  B10101,
+  B00100,
+  B11111,
+};
+
+
+byte SPOILER_BOTTOM_2[8] = {
+  B00100,
+  B01110,
+  B10101,
+  B00100,
+  B00100,
+  B00100,
+  B11111,
+};
+
+
+byte SPOILER_BOTTOM_FULL[8] = {
+  B00100,
+  B00100,
+  B00100,
+  B00100,
+  B00100,
+  B00100,
+  B11111,
+};
+
+
+byte SPOILER_TOP_3[8] = {
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00100,
+  B01110,
+  B10101,
+};
+
+
+byte SPOILER_TOP_FULL[8] = {
+  B00100,
+  B01110,
+  B10101,
+  B00100,
+  B00100,
+  B00100,
+  B00100,
 };
 
