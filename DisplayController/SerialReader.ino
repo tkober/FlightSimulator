@@ -41,7 +41,7 @@ int read_initialization() {
 
 
 int process_initialization_data() {
-  if (init_buffer_processed_position < init_fill_position) {
+  if (init_process_position < init_fill_position) {
     char token = init_buffer[init_process_position];
     init_process_position++;
     token_processing(token);
