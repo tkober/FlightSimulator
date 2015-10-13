@@ -58,8 +58,8 @@ int isChangeRadioButtonPressed = 0;
 // Public
 
 void radio_setup() {
-  pinMode(CHANGE_RADIO_PIN, INPUT);
-  pinMode(SWAP_FREQUENCY_PIN, INPUT);
+  pinMode(CHANGE_RADIO_PIN, INPUT_PULLUP);
+  pinMode(SWAP_FREQUENCY_PIN, INPUT_PULLUP);
 
   radio_lcd.createChar(RADIO_CALL_GLYH_INDEX, CALL_GLYPH);
   radio_lcd.begin(RADIO_LCD_COL_COUNT, RADIO_LCD_ROW_COUNT);
