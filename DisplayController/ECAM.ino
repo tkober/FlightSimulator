@@ -35,26 +35,17 @@ void ecam_setup() {
   ecam_lcd.createChar(FLAP_EDGE_DOWNWARD_1_INDEX, FLAP_EDGE_DOWNWARD_1);
   ecam_lcd.createChar(FLAP_EDGE_DOWNWARD_2_INDEX, FLAP_EDGE_DOWNWARD_2);
   ecam_lcd.begin(ECAM_LCD_COL_COUNT, ECAM_LCD_ROW_COUNT);
+  flaps_3();
 }
 
 
 void ecam_tick() {
-  flaps_up();
-  delay(2000);
-  flaps_1();
-  delay(2000);
-  flaps_2();
-  delay(2000);
-  flaps_3();
-  delay(2000);
-  flaps_full();
-  delay(2000);
 }
 
 
 void flaps_up() {
   ecam_lcd.clear();
-  ecam_lcd.print("Flaps         0%");
+  ecam_lcd.print("Flaps             0%");
   ecam_lcd.setCursor(0, 1);
   ecam_lcd.print("Up");
   ecam_lcd.setCursor(5, 1);
@@ -74,7 +65,7 @@ void flaps_up() {
 
 void flaps_1() {
   ecam_lcd.clear();
-  ecam_lcd.print("Flaps        10%");
+  ecam_lcd.print("Flaps            10%");
   ecam_lcd.setCursor(0, 1);
   ecam_lcd.print("1");
   ecam_lcd.setCursor(5, 1);
@@ -94,7 +85,7 @@ void flaps_1() {
 
 void flaps_2() {
   ecam_lcd.clear();
-  ecam_lcd.print("Flaps        30%");
+  ecam_lcd.print("Flaps            30%");
   ecam_lcd.setCursor(0, 1);
   ecam_lcd.print("2");
   ecam_lcd.setCursor(5, 1);
@@ -114,7 +105,7 @@ void flaps_2() {
 
 void flaps_3() {
   ecam_lcd.clear();
-  ecam_lcd.print("Flaps        50%");
+  ecam_lcd.print("Flaps            50%");
   ecam_lcd.setCursor(0, 1);
   ecam_lcd.print("3");
   ecam_lcd.setCursor(5, 1);
@@ -134,7 +125,7 @@ void flaps_3() {
 
 void flaps_full() {
   ecam_lcd.clear();
-  ecam_lcd.print("Flaps       100%");
+  ecam_lcd.print("Flaps           100%");
   ecam_lcd.setCursor(0, 1);
   ecam_lcd.print("Full");
   ecam_lcd.setCursor(5, 1);
