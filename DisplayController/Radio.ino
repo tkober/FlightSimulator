@@ -17,8 +17,8 @@ void change_frequency();
 #define NAV1_LABEL    "ACT   NAV1   S/B"
 #define NAV2_LABEL    "ACT   NAV2   S/B"
 
-#define SWAP_FREQUENCY_PIN    9
-#define CHANGE_RADIO_PIN      8
+#define SWAP_FREQUENCY_PIN    3
+#define CHANGE_RADIO_PIN      2
 
 #define RADIO_LCD_ROW_COUNT   2
 #define RADIO_LCD_COL_COUNT   16
