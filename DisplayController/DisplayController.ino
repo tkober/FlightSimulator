@@ -32,6 +32,7 @@ void loop() {
   read_serial();
   
   radio_tick();
+  gear_tick();
   ecam_tick();
 }
 
