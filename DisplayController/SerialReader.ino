@@ -1,7 +1,14 @@
 #include "SerialReader.h"
 #include "Radio.h"
+#include "Gear.h"
+#include "Extractions.h"
 
 #define BAUD_RATE   115200
+
+char init_buffer[200];
+int init_fill_position = 0;
+int init_process_position = 0;
+
 
 void determine_extraction_type(char token);
 void determine_radio_ap_parameter(char token);
@@ -17,6 +24,31 @@ int position_to_write = 0;
 
 void serial_setup() {
   Serial.begin(BAUD_RATE);
+}
+
+
+int read_initialization() {
+  if (Serial.available()) {
+    char token = Serial.read();
+    if (token == '\n') {
+      return 1;
+    }
+    init_buffer[init_fill_position] = token;
+    init_fill_position++;
+  }
+  return 0;
+}
+
+
+int process_initialization_data() {
+  if (init_buffer_processed_position < init_fill_position) {
+    char token = init_buffer[init_process_position];
+    init_process_position++;
+    token_processing(token);
+    return 0;
+  } else {
+    return 1;
+  }
 }
 
 
@@ -45,17 +77,16 @@ void store_token(char token, char destination[], int size, int *updated) {
 // Private
 
 void determine_extraction_type(char token) {
-  int bla = digitalRead(1);
   switch (token) {
-    case '=':
+    case RADIO_AP_EXTRACTIONS:
       token_processing = determine_radio_ap_parameter;
       break;
 
-    case '<':
+    case INDICATIONS_SYSTEM_1_EXTRACTIONS:
       token_processing = determine_indication_sys1_parameter;
       break;
 
-    case '?':
+    case SYSTEM_2_OTHERS_EXTRACTIONS:
       token_processing = determine_sys2_other_parameter;
       break;
   }
@@ -66,35 +97,35 @@ void determine_extraction_type(char token) {
 // Type: Radio / Autopilot
 void determine_radio_ap_parameter(char token) {
   switch (token) {
-    case 'A':
+    case COM_1_FREQ_EXTRACTION:
       token_processing = read_com1_freq;
       break;
 
-    case 'B':
+    case COM_1_SB_FREQ_EXTRACTION:
       token_processing = read_com1_sb_freq;
       break;
 
-    case 'C':
+    case COM_2_FREQ_EXTRACTION:
       token_processing = read_com2_freq;
       break;
 
-    case 'D':
+    case COM_2_SB_FREQ_EXTRACTION:
       token_processing = read_com2_sb_freq;
       break;
 
-    case 'E':
+    case NAV_1_FREQ_EXTRACTION:
       token_processing = read_nav1_freq;
       break;
 
-    case 'F':
+    case NAV_1_SB_FREQ_EXTRACTION:
       token_processing = read_nav1_sb_freq;
       break;
 
-    case 'G':
+    case NAV_2_FREQ_EXTRACTION:
       token_processing = read_nav2_freq;
       break;
 
-    case 'H':
+    case NAV_2_SB_FREQ_EXTRACTION:
       token_processing = read_nav2_sb_freq;
       break;
 
@@ -121,7 +152,14 @@ void determine_indication_sys1_parameter(char token) {
 // Type: System2 / Other
 void determine_sys2_other_parameter(char token) {
   switch (token) {
+    case GEAR_POSITION_EXTRACTION: 
+      token_processing = read_gear_position;
+      break;
 
+    case GEAR_RETRACTABLE_EXTRACTION: 
+      token_processing = read_gear_retractable;
+      break;
+    
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
