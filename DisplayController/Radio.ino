@@ -2,6 +2,7 @@
 #include "SerialReader.h"
 #include "SimConnectInputs.h"
 #include "Glyphs.h"
+#include "Button.h"
 
 
 void print_radio();
@@ -9,7 +10,9 @@ void print_label();
 void print_frequncies();
 void print_active_frequency();
 void print_standby_frequency();
-void change_frequency();
+
+void swap_frequency();
+void next_radio();
 
 
 #define COM1_LABEL    "ACT   COM1   S/B"
@@ -17,8 +20,8 @@ void change_frequency();
 #define NAV1_LABEL    "ACT   NAV1   S/B"
 #define NAV2_LABEL    "ACT   NAV2   S/B"
 
-#define SWAP_FREQUENCY_PIN    3
-#define CHANGE_RADIO_PIN      2
+#define SWAP_FREQ_PIN     ANALOG_PIN(4)
+#define NEXT_RADIO_PIN    ANALOG_PIN(5)
 
 #define RADIO_LCD_ROW_COUNT   2
 #define RADIO_LCD_COL_COUNT   16
@@ -55,11 +58,14 @@ int isSwapFrequencyButtonPressed = 0;
 int isChangeRadioButtonPressed = 0;
 
 
+Button swap_freq_button = Button(SWAP_FREQ_PIN, 1);
+Button next_radio_button = Button(NEXT_RADIO_PIN, 1);
+
 // Public
 
 void radio_setup() {
-  pinMode(CHANGE_RADIO_PIN, INPUT_PULLUP);
-  pinMode(SWAP_FREQUENCY_PIN, INPUT_PULLUP);
+  swap_freq_button.setOnClick(swap_frequency);
+  next_radio_button.setOnClick(next_radio);
 
   radio_lcd.createChar(RADIO_CALL_GLYH_INDEX, CALL_GLYPH);
   radio_lcd.begin(RADIO_LCD_COL_COUNT, RADIO_LCD_ROW_COUNT);
@@ -68,25 +74,9 @@ void radio_setup() {
 
 
 void radio_tick() {
-  if (digitalRead(SWAP_FREQUENCY_PIN) == 1) {
-    if (isSwapFrequencyButtonPressed == 0) {
-      change_frequency();
-    }
-    isSwapFrequencyButtonPressed = 1;
-  } else {
-    isSwapFrequencyButtonPressed = 0;
-  }
-
-  if (digitalRead(CHANGE_RADIO_PIN) == 1) {
-    if (isChangeRadioButtonPressed == 0) {
-      currentRadio = (Radio)((currentRadio + 1) % RADIO_COUNT);
-      radio_updated = 1;
-    }
-    isChangeRadioButtonPressed = 1;
-  } else {
-    isChangeRadioButtonPressed = 0;
-  }
-
+  swap_freq_button.tick();
+  next_radio_button.tick();
+  
   if (radio_updated == 1) {
     print_radio();
     radio_updated = 0;
@@ -224,7 +214,7 @@ void print_standby_frequency() {
 }
 
 
-void change_frequency() {
+void swap_frequency() {
   char *code = "";
   switch (currentRadio) {
     case COM1:
@@ -244,5 +234,11 @@ void change_frequency() {
       break;
   }
   Serial.println(code);
+}
+
+
+void next_radio() {
+  currentRadio = (Radio)((currentRadio + 1) % RADIO_COUNT);
+  radio_updated = 1;
 }
 

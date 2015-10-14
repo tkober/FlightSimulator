@@ -1,3 +1,9 @@
+#ifndef BUTTON_H
+#define BUTTON_H
+
+#define ANALOG_PIN(_pin)    (_pin+54)
+
+
 typedef void (*ButtonEventHandler)();
 
 
@@ -28,3 +34,5 @@ class Button {
     
     unsigned long _startedTime;
 };
+
+#endif
