@@ -20,8 +20,8 @@ void next_radio();
 #define NAV1_LABEL    "ACT   NAV1   S/B"
 #define NAV2_LABEL    "ACT   NAV2   S/B"
 
-#define SWAP_FREQ_PIN     ANALOG_PIN(4)
-#define NEXT_RADIO_PIN    ANALOG_PIN(5)
+#define SWAP_FREQ_PIN     ANALOG_PIN(2)
+#define NEXT_RADIO_PIN    ANALOG_PIN(3)
 
 #define RADIO_LCD_ROW_COUNT   2
 #define RADIO_LCD_COL_COUNT   16
