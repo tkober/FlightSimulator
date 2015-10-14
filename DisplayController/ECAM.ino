@@ -1,6 +1,20 @@
 #include "ECAM.h"
 #include "Glyphs.h"
 #include "MFD.h"
+#include "Keypad.h"
+#include "Button.h"
+
+
+void keypad_tick();
+
+
+#define KEYPAD_ROW_COUNT  4
+#define KEYPAD_COL_COUNT  4
+#define KEYPAD_ROW_PINS   (byte[]){ ANALOG_PIN(15), ANALOG_PIN(14), ANALOG_PIN(13), ANALOG_PIN(12) }
+#define KEYPAD_COL_PINS   (byte[]){ ANALOG_PIN(11), ANALOG_PIN(10), ANALOG_PIN(9), ANALOG_PIN(8) } 
+#define KEYPAD_KEYS       (char[KEYPAD_ROW_COUNT][KEYPAD_COL_COUNT]){ {'1','2','3','A'}, {'4','5','6','B'}, {'7','8','9','C'}, {'*','0','#','D'} }
+
+Keypad keypad = Keypad( makeKeymap(KEYPAD_KEYS), KEYPAD_ROW_PINS, KEYPAD_COL_PINS, KEYPAD_ROW_COUNT, KEYPAD_COL_COUNT); 
 
 LiquidCrystal ecam_lcd = LiquidCrystal(49, 47, 52, 50, 48, 46);
 
@@ -34,6 +48,8 @@ char spoilers_armed[SPOILERS_ARMED_SIZE+1]         = "0";
 
 int control_surfaces_updated = 0;
 
+
+// Public
 
 void ecam_setup() {
   ecam_lcd.createChar(FLAPS_TOP_INDEX, FLAPS_TOP);
@@ -77,6 +93,7 @@ void ecam_setup() {
 
 
 void ecam_tick() {
+  keypad_tick();
 }
 
 
@@ -95,10 +112,20 @@ void read_spoilers_armed(char token) {
 }
 
 
+// Private
+
+void keypad_tick() {
+  char customKey = keypad.getKey();
+  if (customKey){
+    // TODO: Do something with the key
+  }
+}
 
 
 
 
+
+// TEST ONLY
 
 void flaps_up() {
   ecam_lcd.setCursor(0, 2);
