@@ -10,6 +10,9 @@
 
 
 #define INDICATIONS_SYSTEM_1_EXTRACTIONS    '<'
+#define FLAPS_POSITION_EXTRACTION           'G'
+#define SPOILERS_POSITON_EXTRACTION         'i'
+#define SPOILERS_ARMED_EXTRACTION           'j'
 
 
 #define SYSTEM_2_OTHERS_EXTRACTIONS         '?'

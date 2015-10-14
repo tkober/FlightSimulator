@@ -1,7 +1,8 @@
 #include "ECAM.h"
 #include "Glyphs.h"
+#include "MFD.h"
 
-LiquidCrystal ecam_lcd = LiquidCrystal(49, 47, 52, 50, 48, 46);     // ECAM
+LiquidCrystal ecam_lcd = LiquidCrystal(49, 47, 52, 50, 48, 46);
 
 #define ECAM_LCD_ROW_COUNT   4
 #define ECAM_LCD_COL_COUNT   20
@@ -23,6 +24,16 @@ LiquidCrystal ecam_lcd = LiquidCrystal(49, 47, 52, 50, 48, 46);     // ECAM
 #define SPOILER_BOTTOM_2_GLYPH          byte(SPOILER_BOTTOM_2_INDEX)
 #define SPOILER_BOTTOM_FULL_GLYPH       byte(SPOILER_BOTTOM_FULL_INDEX)
 #define SPOILER_TOP_FULL_GLYPH          byte(SPOILER_TOP_FULL_INDEX)
+
+#define FLAPS_POSITION_SIZE                        3
+char flaps_position[FLAPS_POSITION_SIZE+1]         = "000";
+#define SPOILERS_POSITION_SIZE                     3
+char spoilers_position[SPOILERS_POSITION_SIZE+1]   = "000";
+#define SPOILERS_ARMED_SIZE                        1
+char spoilers_armed[SPOILERS_ARMED_SIZE+1]         = "0";
+
+int control_surfaces_updated = 0;
+
 
 void ecam_setup() {
   ecam_lcd.createChar(FLAPS_TOP_INDEX, FLAPS_TOP);
@@ -67,6 +78,26 @@ void ecam_setup() {
 
 void ecam_tick() {
 }
+
+
+void read_flaps_position(char token) {
+  store_token(token, flaps_position, FLAPS_POSITION_SIZE, &control_surfaces_updated);
+}
+
+
+void read_spoilers_position(char token) {
+  store_token(token, spoilers_position, SPOILERS_POSITION_SIZE, &control_surfaces_updated);
+}
+
+
+void read_spoilers_armed(char token) {
+  store_token(token, spoilers_armed, SPOILERS_ARMED_SIZE, &control_surfaces_updated);
+}
+
+
+
+
+
 
 
 void flaps_up() {
