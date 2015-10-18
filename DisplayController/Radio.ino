@@ -5,6 +5,7 @@
 #include "Button.h"
 #include "Pins.h"
 #include "MFD.h"
+#include "RotaryEncoder.h"
 
 
 #define RADIO_LCD_ROW_COUNT   2
@@ -42,6 +43,8 @@ void next_radio();
 void show_current_radio();
 void call();
 void change_pressed();
+void increment();
+void decrement();
 
 extern RadioPage com1_page;
 void com1_page_will_appeaer();
@@ -153,12 +156,11 @@ RadioPage transponder_page = RADIO_PAGE_MAKE(&nav2_page, &com1_page,
 );
 
 
-Button change_button = Button(RADIO_CHANGE_PRESS_PIN, 1);
-
 Button call_button = Button(RADIO_CALL_PIN, 1);
 Button swap_freq_button = Button(RADIO_SWAP_FREQ_PIN, 1);
 Button previous_radio_button = Button(RADIO_PREVIOUS_RADIO_PIN, 1);
 Button next_radio_button = Button(RADIO_NEXT_RADIO_PIN, 1);
+PushableRotaryEncoder change_rotary_encoder = PushableRotaryEncoder(RADIO_CHANGE_ROTATE_PIN1, RADIO_CHANGE_ROTATE_PIN2, RADIO_CHANGE_PRESS_PIN, 1);
 LiquidCrystal radio_lcd = LiquidCrystal(RADIO_LCD_PINS);
 
 RadioPage *current_radio_page = &com1_page;
@@ -197,12 +199,13 @@ TransponderChange transponder_change = Digit1;
 // Public
 
 void radio_setup() {
-  change_button.setOnClick(change_pressed);
-  
   swap_freq_button.setOnClick(swap_frequency);
   previous_radio_button.setOnClick(previous_radio);
   next_radio_button.setOnClick(next_radio);
   call_button.setOnClick(call);
+  change_rotary_encoder.setOnClick(change_pressed);
+  change_rotary_encoder.setOnRotateClockwise(increment);
+  change_rotary_encoder.setOnRotateCounterClockwise(decrement);
 
   radio_lcd.createChar(RADIO_CALL_GLYH_INDEX, CALL_GLYPH);
   radio_lcd.createChar(RADIO_SWAP_LEFT_GLYPH_INDEX, SWAP_LEFT_GLYPH);
@@ -212,13 +215,12 @@ void radio_setup() {
 }
 
 
-void radio_tick() {
-  change_button.tick();
-  
+void radio_tick() {  
   swap_freq_button.tick();
   previous_radio_button.tick();
   next_radio_button.tick();
   call_button.tick();
+  change_rotary_encoder.tick();
 
   if (current_radio_page->update_if_necessary != NULL) {
     current_radio_page->update_if_necessary();
@@ -342,6 +344,20 @@ void change_pressed() {
 }
 
 
+void increment() {
+  if (current_radio_page->increment != NULL) {
+    current_radio_page->increment();
+  }
+}
+
+
+void decrement() {
+  if (current_radio_page->decrement != NULL) {
+    current_radio_page->decrement();
+  }
+}
+
+
 // COM1 Page
 void com1_page_will_appeaer() {
   frequency_change = Megaherz;
@@ -399,12 +415,28 @@ void com1_page_swap() {
 
 
 void com1_page_increment() {
-    
+  switch (frequency_change) {
+    case Megaherz:
+      Serial.println(INCREMENT_COM1_MHZ);
+      break;
+
+    case Kiloherz:
+      Serial.println(INCREMENT_COM1_KHZ);
+      break;
+  }
 }
 
 
 void com1_page_decrement() {
-    
+  switch (frequency_change) {
+    case Megaherz:
+      Serial.println(DECREMENT_COM1_MHZ);
+      break;
+
+    case Kiloherz:
+      Serial.println(DECREMENT_COM1_KHZ);
+      break;
+  }
 }
 
 
@@ -465,12 +497,28 @@ void com2_page_swap() {
 
 
 void com2_page_increment() {
-    
+  switch (frequency_change) {
+    case Megaherz:
+      Serial.println(INCREMENT_COM2_MHZ);
+      break;
+
+    case Kiloherz:
+      Serial.println(INCREMENT_COM2_KHZ);
+      break;
+  }
 }
 
 
 void com2_page_decrement() {
-    
+  switch (frequency_change) {
+    case Megaherz:
+      Serial.println(DECREMENT_COM2_MHZ);
+      break;
+
+    case Kiloherz:
+      Serial.println(DECREMENT_COM2_KHZ);
+      break;
+  }
 }
 
 
@@ -534,12 +582,28 @@ void nav1_page_swap() {
 
 
 void nav1_page_increment() {
-    
+  switch (frequency_change) {
+    case Megaherz:
+      Serial.println(INCREMENT_NAV1_MHZ);
+      break;
+
+    case Kiloherz:
+      Serial.println(INCREMENT_NAV1_KHZ);
+      break;
+  }   
 }
 
 
 void nav1_page_decrement() {
-    
+  switch (frequency_change) {
+    case Megaherz:
+      Serial.println(DECREMENT_NAV1_MHZ);
+      break;
+
+    case Kiloherz:
+      Serial.println(DECREMENT_NAV1_KHZ);
+      break;
+  }  
 }
 
 
@@ -602,12 +666,28 @@ void nav2_page_swap() {
 
 
 void nav2_page_increment() {
-    
+  switch (frequency_change) {
+    case Megaherz:
+      Serial.println(INCREMENT_NAV2_MHZ);
+      break;
+
+    case Kiloherz:
+      Serial.println(INCREMENT_NAV2_KHZ);
+      break;
+  }  
 }
 
 
 void nav2_page_decrement() {
-    
+  switch (frequency_change) {
+    case Megaherz:
+      Serial.println(DECREMENT_NAV2_MHZ);
+      break;
+
+    case Kiloherz:
+      Serial.println(DECREMENT_NAV2_KHZ);
+      break;
+  }  
 }
 
 
@@ -663,11 +743,43 @@ void transponder_page_change_button_pressed() {
 
 
 void transponder_page_increment() {
-    
+  switch(transponder_change) {
+    case Digit1:
+      Serial.println(INCREMENT_TRANSPONDER_DIGIT1);
+      break;
+
+    case Digit2:
+      Serial.println(INCREMENT_TRANSPONDER_DIGIT1);
+      break;
+
+    case Digit3:
+      Serial.println(INCREMENT_TRANSPONDER_DIGIT1);
+      break;
+
+    case Digit4:
+      Serial.println(INCREMENT_TRANSPONDER_DIGIT1);
+      break;
+  }
 }
 
 
 void transponder_page_decrement() {
-    
+  switch(transponder_change) {
+    case Digit1:
+      Serial.println(DECREMENT_TRANSPONDER_DIGIT1);
+      break;
+
+    case Digit2:
+      Serial.println(DECREMENT_TRANSPONDER_DIGIT1);
+      break;
+
+    case Digit3:
+      Serial.println(DECREMENT_TRANSPONDER_DIGIT1);
+      break;
+
+    case Digit4:
+      Serial.println(DECREMENT_TRANSPONDER_DIGIT1);
+      break;
+  }
 }
 

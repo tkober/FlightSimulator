@@ -1,9 +1,6 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#include "Pins.h"
-
-
 typedef void (*ButtonEventHandler)();
 
 
