@@ -7,6 +7,7 @@
 Button::Button(int pin, int pullUp) {
   _pin = pin;
   _clickTicks = DEFAULT_CLICK_TICKS;
+  _isPullUp = pullUp;
   pinMode(pin, pullUp == 1 ? INPUT_PULLUP : INPUT);
 }
 
@@ -26,8 +27,8 @@ void Button::setClickTicks(int clickTicks)
 void Button::tick()
 {
   int now = millis();
-  
-  if (digitalRead(_pin) == HIGH) {
+  int triggeringState = _isPullUp == 1 ? LOW : HIGH;
+  if (digitalRead(_pin) == triggeringState) {
     switch (_state) {
       case Normal:
         _startedTime = now;

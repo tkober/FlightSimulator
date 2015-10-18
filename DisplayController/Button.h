@@ -1,7 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-#define ANALOG_PIN(_pin)    (_pin+54)
+#include "Pins.h"
 
 
 typedef void (*ButtonEventHandler)();
@@ -26,6 +26,7 @@ class Button {
   
   private:
     int _pin;
+    int _isPullUp;
     ButtonState _state;
     
     int _clickTicks;
