@@ -9,7 +9,33 @@ byte CALL_GLYPH[8] = {
   B01001,         
   B00010,
   B00000         
-};                 
+};
+
+
+// Swap Indicator
+
+byte SWAP_LEFT_GLYPH[8] = {   
+  B00000,         
+  B00010,         
+  B00100,         
+  B01111,         
+  B00100,         
+  B00010,         
+  B00000,
+  B00000         
+};
+
+
+byte SWAP_RIGHT_GLYPH[8] = {   
+  B00000,         
+  B01000,         
+  B00100,         
+  B11110,         
+  B00100,         
+  B01000,         
+  B00000,
+  B00000         
+};
 
 
 // Flaps

@@ -10,8 +10,14 @@
 #define RADIO_LCD_ROW_COUNT   2
 #define RADIO_LCD_COL_COUNT   16
 
-#define RADIO_CALL_GLYH_INDEX 0
-#define RADIO_CALL_GLYH       byte(RADIO_CALL_GLYH_INDEX)
+#define RADIO_CALL_GLYH_INDEX         0
+#define RADIO_CALL_GLYH               byte(RADIO_CALL_GLYH_INDEX)
+  
+#define RADIO_SWAP_LEFT_GLYPH_INDEX   1
+#define RADIO_SWAP_LEFT_GLYPH         byte(RADIO_SWAP_LEFT_GLYPH_INDEX)
+
+#define RADIO_SWAP_RIGHT_GLYPH_INDEX  2
+#define RADIO_SWAP_RIGHT_GLYPH        byte(RADIO_SWAP_RIGHT_GLYPH_INDEX)
 
 
 typedef enum {
@@ -199,6 +205,8 @@ void radio_setup() {
   call_button.setOnClick(call);
 
   radio_lcd.createChar(RADIO_CALL_GLYH_INDEX, CALL_GLYPH);
+  radio_lcd.createChar(RADIO_SWAP_LEFT_GLYPH_INDEX, SWAP_LEFT_GLYPH);
+  radio_lcd.createChar(RADIO_SWAP_RIGHT_GLYPH_INDEX, SWAP_RIGHT_GLYPH);
   radio_lcd.begin(RADIO_LCD_COL_COUNT, RADIO_LCD_ROW_COUNT);
   show_current_radio();
 }
@@ -348,7 +356,8 @@ void com1_page_render() {
   radio_lcd.write("  S/B");
   radio_lcd.setCursor(0, 1);
   print_string_to_lcd(radio_lcd, com1_freq, COM_FREQ_SIZE);
-  radio_lcd.write("<>");
+  radio_lcd.write(RADIO_SWAP_LEFT_GLYPH);
+  radio_lcd.write(RADIO_SWAP_RIGHT_GLYPH);
   print_string_to_lcd(radio_lcd, com1_sb_freq, COM_FREQ_SIZE);
   switch(frequency_change) {
     case Megaherz:
@@ -413,7 +422,8 @@ void com2_page_render() {
   radio_lcd.write("  S/B");
   radio_lcd.setCursor(0, 1);
   print_string_to_lcd(radio_lcd, com2_freq, COM_FREQ_SIZE);
-  radio_lcd.write("<>");
+  radio_lcd.write(RADIO_SWAP_LEFT_GLYPH);
+  radio_lcd.write(RADIO_SWAP_RIGHT_GLYPH);
   print_string_to_lcd(radio_lcd, com2_sb_freq, COM_FREQ_SIZE);
   switch(frequency_change) {
     case Megaherz:
@@ -478,7 +488,10 @@ void nav1_page_render() {
   radio_lcd.write("  S/B");
   radio_lcd.setCursor(0, 1);
   print_string_to_lcd(radio_lcd, nav1_freq, NAV_FREQ_SIZE);
-  radio_lcd.write(" <> ");
+  radio_lcd.write(' ');
+  radio_lcd.write(RADIO_SWAP_LEFT_GLYPH);
+  radio_lcd.write(RADIO_SWAP_RIGHT_GLYPH);
+  radio_lcd.write(' ');
   print_string_to_lcd(radio_lcd, nav1_sb_freq, NAV_FREQ_SIZE);
   switch(frequency_change) {
     case Megaherz:
@@ -544,7 +557,10 @@ void nav2_page_render() {
   radio_lcd.write("  S/B");
   radio_lcd.setCursor(0, 1);
   print_string_to_lcd(radio_lcd, nav2_freq, NAV_FREQ_SIZE);
-  radio_lcd.write(" <> ");
+  radio_lcd.write(' ');
+  radio_lcd.write(RADIO_SWAP_LEFT_GLYPH);
+  radio_lcd.write(RADIO_SWAP_RIGHT_GLYPH);
+  radio_lcd.write(' ');
   print_string_to_lcd(radio_lcd, nav2_sb_freq, NAV_FREQ_SIZE);
   switch(frequency_change) {
     case Megaherz:

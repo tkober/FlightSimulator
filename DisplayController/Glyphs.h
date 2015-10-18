@@ -1,5 +1,8 @@
 extern byte CALL_GLYPH[8];
 
+extern byte SWAP_LEFT_GLYPH[8];
+extern byte SWAP_RIGHT_GLYPH[8];
+
 extern byte FLAPS_TOP[8];
 extern byte FLAPS_MIDDLE[8];
 extern byte FLAPS_BOTTOM[8];
