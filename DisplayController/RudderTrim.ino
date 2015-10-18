@@ -1,3 +1,4 @@
 #include "RudderTrim.h"
+#include "Pins.h"
 
-LiquidCrystal rudder_trim_lcd = LiquidCrystal(45, 43, 41, 39, 37, 35);     // Rudder trim
+LiquidCrystal rudder_trim_lcd = LiquidCrystal(RUDDER_TRIM_LCD_PINS);     // Rudder trim

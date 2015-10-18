@@ -7,6 +7,11 @@
 #define NAV_1_SB_FREQ_EXTRACTION            'F'
 #define NAV_2_FREQ_EXTRACTION               'G'
 #define NAV_2_SB_FREQ_EXTRACTION            'H'
+#define TRANSPONDER_CODE_EXTRACTION         'J'
+#define COM_1_SOUND_ACTIVE_EXTRACTION       'M'
+#define COM_2_SOUND_ACTIVE_EXTRACTION       'N'
+#define NAV_1_SOUND_ACTIVE_EXTRACTION       'P'
+#define NAV_2_SOUND_ACTIVE_EXTRACTION       'Q'
 
 
 #define INDICATIONS_SYSTEM_1_EXTRACTIONS    '<'

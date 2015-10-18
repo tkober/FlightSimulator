@@ -1,3 +1,7 @@
+#ifndef MFD_H
+#define MFD_H
+
+
 #define MFD_PAGE_MEMBERS  void *previous_page;                  \
                           void *next_page;                      \
                                                                 \
@@ -20,6 +24,7 @@ typedef struct RadioPage {
   void (*increment)();
   void (*decrement)();
 } RadioPage;
+#define RADIO_PAGE_MAKE(_previous_page, _next_page, _will_appear, _render, _update_if_necessary, _will_disappear, _change_button_pressed, _call, _swap, _increment, _decrement) {_previous_page, _next_page, _will_appear, _render, _update_if_necessary, _will_disappear, _change_button_pressed, _call, _swap, _increment, _decrement}
 
 
 typedef struct ECAMPage {
@@ -29,3 +34,7 @@ typedef struct ECAMPage {
   void (*handle_keypad_input)(char key);
 } ECAMPage;
 
+
+extern void print_string_to_lcd(LiquidCrystal lcd, char string[], int size);
+
+#endif

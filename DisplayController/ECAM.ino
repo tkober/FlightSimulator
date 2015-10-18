@@ -3,6 +3,7 @@
 #include "MFD.h"
 #include "Keypad.h"
 #include "Button.h"
+#include "Pins.h"
 
 
 void keypad_tick();
@@ -16,7 +17,7 @@ void keypad_tick();
 
 Keypad keypad = Keypad( makeKeymap(KEYPAD_KEYS), KEYPAD_ROW_PINS, KEYPAD_COL_PINS, KEYPAD_ROW_COUNT, KEYPAD_COL_COUNT); 
 
-LiquidCrystal ecam_lcd = LiquidCrystal(49, 47, 52, 50, 48, 46);
+LiquidCrystal ecam_lcd = LiquidCrystal(ECAM_LCD_PINS);
 
 #define ECAM_LCD_ROW_COUNT   4
 #define ECAM_LCD_COL_COUNT   20
@@ -40,11 +41,11 @@ LiquidCrystal ecam_lcd = LiquidCrystal(49, 47, 52, 50, 48, 46);
 #define SPOILER_TOP_FULL_GLYPH          byte(SPOILER_TOP_FULL_INDEX)
 
 #define FLAPS_POSITION_SIZE                        3
-char flaps_position[FLAPS_POSITION_SIZE+1]         = "000";
+char flaps_position[FLAPS_POSITION_SIZE]         = {'0', '0', '0'};
 #define SPOILERS_POSITION_SIZE                     3
-char spoilers_position[SPOILERS_POSITION_SIZE+1]   = "000";
+char spoilers_position[SPOILERS_POSITION_SIZE]   = {'0', '0', '0'};
 #define SPOILERS_ARMED_SIZE                        1
-char spoilers_armed[SPOILERS_ARMED_SIZE+1]         = "0";
+char spoilers_armed[SPOILERS_ARMED_SIZE]         = {'0'};
 
 int control_surfaces_updated = 0;
 
@@ -61,34 +62,10 @@ void ecam_setup() {
   ecam_lcd.createChar(SPOILER_BOTTOM_FULL_INDEX, SPOILER_BOTTOM_FULL);
   ecam_lcd.createChar(SPOILER_TOP_FULL_INDEX, SPOILER_TOP_FULL);
   ecam_lcd.begin(ECAM_LCD_COL_COUNT, ECAM_LCD_ROW_COUNT);
+  
   ecam_lcd.clear();
-    spoilers_retracted();
-    flaps_up();
-    delay(2000);
-
-    ecam_lcd.clear();
-    spoilers_1();
-    flaps_1();
-    delay(2000);
-
-    ecam_lcd.clear();
-    spoilers_2();
-    flaps_2();
-    delay(2000);
-
-    ecam_lcd.clear();
-    spoilers_full();
-    flaps_3();
-    delay(2000);
-
-    ecam_lcd.clear();
-    spoilers_full();
-    flaps_full();
-    delay(2000);
-
-    ecam_lcd.clear();
-    spoilers_retracted();
-    flaps_up();
+  spoilers_retracted();
+  flaps_up();
 }
 
 

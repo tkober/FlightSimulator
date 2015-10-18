@@ -1,3 +1,5 @@
 #include "ElevatorTrim.h"
+#include "Pins.h"
 
-LiquidCrystal elevator_trim_lcd = LiquidCrystal(33, 31, 29, 27, 25, 23);     // Elevator trim
+
+LiquidCrystal elevator_trim_lcd = LiquidCrystal(ELEVATOR_TRIM_LCD_PINS);     // Elevator trim

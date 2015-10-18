@@ -1,12 +1,5 @@
 #include "Gear.h"
-
-
-#define NOSE_GEAR_EXTENDED_LED      13
-#define NOSE_GEAR_UNLOCKED_LED      12
-#define LEFT_GEAR_EXTENDED_LED      11
-#define LEFT_GEAR_UNLOCKED_LED      10
-#define RIGHT_GEAR_EXTENDED_LED     9
-#define RIGHT_GEAR_UNLOCKED_LED     8
+#include "Pins.h"
 
 
 #define GEAR_POSITION_SIZE  3
@@ -41,12 +34,12 @@ void show_gear_position(GearPosition gearPosition, int retractable, int extended
 // Public
 
 void gear_setup() {
-  pinMode(NOSE_GEAR_EXTENDED_LED, OUTPUT);
-  pinMode(NOSE_GEAR_UNLOCKED_LED, OUTPUT);
-  pinMode(LEFT_GEAR_EXTENDED_LED, OUTPUT);
-  pinMode(LEFT_GEAR_UNLOCKED_LED, OUTPUT);
-  pinMode(RIGHT_GEAR_EXTENDED_LED, OUTPUT);
-  pinMode(RIGHT_GEAR_UNLOCKED_LED, OUTPUT);
+  pinMode(NOSE_GEAR_EXTENDED_LED_PIN, OUTPUT);
+  pinMode(NOSE_GEAR_UNLOCKED_LED_PIN, OUTPUT);
+  pinMode(LEFT_GEAR_EXTENDED_LED_PIN, OUTPUT);
+  pinMode(LEFT_GEAR_UNLOCKED_LED_PIN, OUTPUT);
+  pinMode(RIGHT_GEAR_EXTENDED_LED_PIN, OUTPUT);
+  pinMode(RIGHT_GEAR_UNLOCKED_LED_PIN, OUTPUT);
   update_gear_leds();  
 }
 
@@ -73,9 +66,9 @@ void read_gear_retractable(char token) {
 
 void update_gear_leds() {
   int gearRetractable = gear_retractable[0] == '1' ? 1 : 0;
-  show_gear_position(position_for_gear(NoseGear), gearRetractable, NOSE_GEAR_EXTENDED_LED, NOSE_GEAR_UNLOCKED_LED);
-  show_gear_position(position_for_gear(LeftGear), gearRetractable, LEFT_GEAR_EXTENDED_LED, LEFT_GEAR_UNLOCKED_LED);
-  show_gear_position(position_for_gear(RightGear), gearRetractable, RIGHT_GEAR_EXTENDED_LED, RIGHT_GEAR_UNLOCKED_LED);
+  show_gear_position(position_for_gear(NoseGear), gearRetractable, NOSE_GEAR_EXTENDED_LED_PIN, NOSE_GEAR_UNLOCKED_LED_PIN);
+  show_gear_position(position_for_gear(LeftGear), gearRetractable, LEFT_GEAR_EXTENDED_LED_PIN, LEFT_GEAR_UNLOCKED_LED_PIN);
+  show_gear_position(position_for_gear(RightGear), gearRetractable, RIGHT_GEAR_EXTENDED_LED_PIN, RIGHT_GEAR_UNLOCKED_LED_PIN);
 }
 
 

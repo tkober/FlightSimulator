@@ -129,6 +129,26 @@ void determine_radio_ap_parameter(char token) {
       token_processing = read_nav2_sb_freq;
       break;
 
+    case TRANSPONDER_CODE_EXTRACTION:
+      token_processing = read_transponder_code;
+      break;
+
+    case COM_1_SOUND_ACTIVE_EXTRACTION:
+      token_processing = read_com1_sound_active;
+      break;
+
+    case COM_2_SOUND_ACTIVE_EXTRACTION:
+      token_processing = read_com2_sound_active;
+      break;
+
+    case NAV_1_SOUND_ACTIVE_EXTRACTION:
+      token_processing = read_nav1_sound_active;
+      break;
+
+    case NAV_2_SOUND_ACTIVE_EXTRACTION:
+      token_processing = read_nav2_sound_active;
+      break;
+
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);

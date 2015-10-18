@@ -13,3 +13,8 @@ extern void read_nav1_freq(char token);
 extern void read_nav1_sb_freq(char token);
 extern void read_nav2_freq(char token);
 extern void read_nav2_sb_freq(char token);
+extern void read_transponder_code(char token);
+extern void read_com1_sound_active(char token);
+extern void read_com2_sound_active(char token);
+extern void read_nav1_sound_active(char token);
+extern void read_nav2_sound_active(char token);

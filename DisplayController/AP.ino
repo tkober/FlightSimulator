@@ -1,4 +1,6 @@
 #include "AP.h"
+#include "Pins.h"
 
-LiquidCrystal ap_lcd_1 = LiquidCrystal(44, 42, 40, 38, 36, 34);     // AP2
-LiquidCrystal ap_lcd_2 = LiquidCrystal(32, 30, 28, 26, 24, 22);     // AP1
+
+LiquidCrystal ap_lcd_1 = LiquidCrystal(AP_LCD_1_PINS);     // AP1
+LiquidCrystal ap_lcd_2 = LiquidCrystal(AP_LCD_2_PINS);     // AP2
