@@ -18,6 +18,7 @@ void setup() {
   radio_setup();
   gear_setup();
   ecam_setup();
+  ap_setup();
 
   while(initialized == 0) {
     initialized = read_initialization(); 
@@ -34,6 +35,7 @@ void loop() {
   radio_tick();
   gear_tick();
   ecam_tick();
+  ap_tick();
 }
 
 

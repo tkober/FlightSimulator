@@ -13,6 +13,9 @@
 #define AP_LCD_1_D7_PIN               34
 #define AP_LCD_1_PINS                 AP_LCD_1_RS_PIN, AP_LCD_1_E_PIN, AP_LCD_1_D4_PIN, AP_LCD_1_D5_PIN, AP_LCD_1_D6_PIN, AP_LCD_1_D7_PIN
 
+#define AP_STATUS_PIN                 7
+#define A_THR_STATUS_PIN              6
+
 
 // AP2
 #define AP_LCD_2_RS_PIN               32

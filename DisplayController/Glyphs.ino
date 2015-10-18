@@ -38,6 +38,20 @@ byte SWAP_RIGHT_GLYPH[8] = {
 };
 
 
+// AP
+
+byte ACTIVED_INDICATOR[8] = {
+  B00000,         
+  B01110,         
+  B11111,         
+  B11111,         
+  B11111,         
+  B01110,         
+  B00000,
+  B00000
+};
+
+
 // Flaps
 
 byte FLAPS_TOP[8] = {

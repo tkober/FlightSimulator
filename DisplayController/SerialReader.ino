@@ -1,6 +1,7 @@
 #include "SerialReader.h"
 #include "Radio.h"
 #include "Gear.h"
+#include "AP.h"
 #include "Extractions.h"
 
 #define BAUD_RATE   115200
@@ -149,6 +150,46 @@ void determine_radio_ap_parameter(char token) {
       token_processing = read_nav2_sound_active;
       break;
 
+    case AP_AIRSPEED_SET_EXTRACTION:
+      token_processing = read_speed;
+      break;
+
+    case AP_AIRSPEED_LOCK_ACTIVE_EXTRACTION:
+      token_processing = read_speed_active;
+      break;
+
+    case AP_HEADING_SET_EXTRACTION:
+      token_processing = read_heading;
+      break;
+
+    case AP_HEADING_LOCK_ACTIVE_EXTRACTION:
+      token_processing = read_heading_active;
+      break;
+
+    case AP_COURSE_SET_EXTRACTION:
+      token_processing = read_course;
+      break;
+
+    case AP_ACTIVE_EXTRACTION:
+      token_processing = read_ap_status;
+      break;
+
+    case A_THR_ARMED_EXTRACTION:
+      token_processing = read_a_thr_status;
+      break;
+
+    case AP_ALTITUDE_SET_EXTRACTION:
+      token_processing = read_altitude;
+      break;
+
+    case AP_VERTICAL_SPEED_SET_EXTRACTION:
+      token_processing = read_vertical_speed;
+      break;
+
+    case AP_ALTITUDE_LOCK_ACTIVE_EXTRACTION:
+      token_processing = read_altitude_active;
+      break;
+    
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
