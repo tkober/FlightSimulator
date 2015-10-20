@@ -26,10 +26,13 @@
 
 #define INDICATIONS_SYSTEM_1_EXTRACTIONS    '<'
 #define FLAPS_POSITION_EXTRACTION           'G'
+#define TRIM_POSITION_EXTRACTION            'H'
 #define SPOILERS_POSITON_EXTRACTION         'i'
 #define SPOILERS_ARMED_EXTRACTION           'j'
 
 
+
 #define SYSTEM_2_OTHERS_EXTRACTIONS         '?'
 #define GEAR_POSITION_EXTRACTION            'Y'
-#define GEAR_RETRACTABLE_EXTRACTION         'b'                    
+#define GEAR_RETRACTABLE_EXTRACTION         'b'           
+#define RUDDER_TRIM_EXTRACTION              'Z'         

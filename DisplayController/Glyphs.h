@@ -14,3 +14,12 @@ extern byte SPOILER_BOTTOM_1[8];
 extern byte SPOILER_BOTTOM_2[8];
 extern byte SPOILER_BOTTOM_FULL[8];
 extern byte SPOILER_TOP_FULL[8];
+
+extern byte TRIM_INDICATOR_POSITION_0[8];
+extern byte TRIM_INDICATOR_POSITION_1[8];
+extern byte TRIM_INDICATOR_POSITION_2[8];
+extern byte TRIM_INDICATOR_POSITION_3[8];
+extern byte TRIM_INDICATOR_POSITION_4[8];
+extern byte TRIM_INDICATOR_CLEAR[8];
+extern byte TRIM_INDICATOR_TO_SCALE_1[8];
+extern byte TRIM_INDICATOR_TO_SCALE_2[8];

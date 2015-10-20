@@ -5,8 +5,7 @@
 #include "Radio.h"
 #include "AP.h"
 #include "ECAM.h"
-#include "ElevatorTrim.h"
-#include "RudderTrim.h"
+#include "ControlSurfaces.h"
 #include "Gear.h"
 
 
@@ -19,6 +18,7 @@ void setup() {
   gear_setup();
   ecam_setup();
   ap_setup();
+  control_surface_setup();
 
   while(initialized == 0) {
     initialized = read_initialization(); 
@@ -36,6 +36,7 @@ void loop() {
   gear_tick();
   ecam_tick();
   ap_tick();
+  control_surface_tick();
 }
 
 

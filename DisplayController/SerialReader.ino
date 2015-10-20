@@ -201,7 +201,10 @@ void determine_radio_ap_parameter(char token) {
 // Type: Indication / System1
 void determine_indication_sys1_parameter(char token) {
   switch (token) {
-
+    case TRIM_POSITION_EXTRACTION:
+      token_processing = read_elevator_trim;
+      break;
+    
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
@@ -219,6 +222,10 @@ void determine_sys2_other_parameter(char token) {
 
     case GEAR_RETRACTABLE_EXTRACTION: 
       token_processing = read_gear_retractable;
+      break;
+
+    case RUDDER_TRIM_EXTRACTION:
+      token_processing = read_ruddert_trim;
       break;
     
     default:
