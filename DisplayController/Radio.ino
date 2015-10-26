@@ -43,8 +43,8 @@ void next_radio();
 void show_current_radio();
 void call();
 void change_pressed();
-void increment();
-void decrement();
+void increment(int boost);
+void decrement(int boost);
 
 extern RadioPage com1_page;
 void com1_page_will_appeaer();
@@ -344,14 +344,14 @@ void change_pressed() {
 }
 
 
-void increment() {
+void increment(int boost) {
   if (current_radio_page->increment != NULL) {
     current_radio_page->increment();
   }
 }
 
 
-void decrement() {
+void decrement(int boost) {
   if (current_radio_page->decrement != NULL) {
     current_radio_page->decrement();
   }
@@ -749,15 +749,15 @@ void transponder_page_increment() {
       break;
 
     case Digit2:
-      Serial.println(INCREMENT_TRANSPONDER_DIGIT1);
+      Serial.println(INCREMENT_TRANSPONDER_DIGIT2);
       break;
 
     case Digit3:
-      Serial.println(INCREMENT_TRANSPONDER_DIGIT1);
+      Serial.println(INCREMENT_TRANSPONDER_DIGIT3);
       break;
 
     case Digit4:
-      Serial.println(INCREMENT_TRANSPONDER_DIGIT1);
+      Serial.println(INCREMENT_TRANSPONDER_DIGIT4);
       break;
   }
 }
@@ -770,15 +770,15 @@ void transponder_page_decrement() {
       break;
 
     case Digit2:
-      Serial.println(DECREMENT_TRANSPONDER_DIGIT1);
+      Serial.println(DECREMENT_TRANSPONDER_DIGIT2);
       break;
 
     case Digit3:
-      Serial.println(DECREMENT_TRANSPONDER_DIGIT1);
+      Serial.println(DECREMENT_TRANSPONDER_DIGIT3);
       break;
 
     case Digit4:
-      Serial.println(DECREMENT_TRANSPONDER_DIGIT1);
+      Serial.println(DECREMENT_TRANSPONDER_DIGIT4);
       break;
   }
 }
