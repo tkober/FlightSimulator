@@ -204,6 +204,10 @@ void determine_indication_sys1_parameter(char token) {
     case TRIM_POSITION_EXTRACTION:
       token_processing = read_elevator_trim;
       break;
+
+    case PARK_BRAKE_POSITION:
+      token_processing = read_parking_brake_status;
+      break;
     
     default:
       token_processing = determine_extraction_type;
@@ -226,6 +230,10 @@ void determine_sys2_other_parameter(char token) {
 
     case RUDDER_TRIM_EXTRACTION:
       token_processing = read_ruddert_trim;
+      break;
+
+    case PARK_BRAKE_POSITION:
+      token_processing = read_parking_brake_status;
       break;
     
     default:

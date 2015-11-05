@@ -29,6 +29,7 @@
 #define TRIM_POSITION_EXTRACTION            'H'
 #define SPOILERS_POSITON_EXTRACTION         'i'
 #define SPOILERS_ARMED_EXTRACTION           'j'
+#define PARK_BRAKE_POSITION                 'q'
 
 
 

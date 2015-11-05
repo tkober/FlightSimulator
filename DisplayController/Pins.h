@@ -93,13 +93,13 @@
 
 // Gear Switch
 #define GEAR_SWITCH_PIN_A             29
-#define GEAR_SWITCH_PIN_A             27
+#define GEAR_SWITCH_PIN_B             27
 
-// Parking Break Toggle
-#define TOGGLE_PARKING_BREAK_PIN      25
+// Parking Brake Toggle
+#define TOGGLE_PARKING_BRAKE_PIN      25
 
-// Parking Break LED
-#define PARKING_BREAK_LED_PIN         23
+// Parking Brake LED
+#define PARKING_BRAKE_LED_PIN         23
 
 // ===============================================================================================================================================================================
 
