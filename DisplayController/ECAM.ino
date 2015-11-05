@@ -11,13 +11,11 @@ void keypad_tick();
 
 #define KEYPAD_ROW_COUNT  4
 #define KEYPAD_COL_COUNT  4
-#define KEYPAD_ROW_PINS   (byte[]){ ANALOG_PIN(8), ANALOG_PIN(9), ANALOG_PIN(10), ANALOG_PIN(11) } 
-#define KEYPAD_COL_PINS   (byte[]){ ANALOG_PIN(12), ANALOG_PIN(13), ANALOG_PIN(14), ANALOG_PIN(15) }
 #define KEYPAD_KEYS       (char[KEYPAD_ROW_COUNT][KEYPAD_COL_COUNT]){ {'1','2','3','A'}, {'4','5','6','B'}, {'7','8','9','C'}, {'*','0','#','D'} }
 
 Keypad keypad = Keypad( makeKeymap(KEYPAD_KEYS), KEYPAD_ROW_PINS, KEYPAD_COL_PINS, KEYPAD_ROW_COUNT, KEYPAD_COL_COUNT); 
 
-LiquidCrystal ecam_lcd = LiquidCrystal(ECAM_LCD_PINS);
+LiquidCrystal ecam_lcd = LiquidCrystal(ECAM_1_LCD_PINS);
 
 #define ECAM_LCD_ROW_COUNT   4
 #define ECAM_LCD_COL_COUNT   20

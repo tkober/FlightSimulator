@@ -1,12 +1,6 @@
 #include <LiquidCrystal.h>
 
-#include "SerialReader.h"
-
-#include "Radio.h"
-#include "AP.h"
-#include "ECAM.h"
-#include "ControlSurfaces.h"
-#include "Gear.h"
+#include "Prefix.h"
 
 
 int initialized = 0;
@@ -14,11 +8,20 @@ int initialized = 0;
 
 void setup() {
   serial_setup();
+
+#ifdef CONTROLLER_A
+  ecam_setup();
   radio_setup();
   gear_setup();
-  ecam_setup();
+#endif
+
+#ifdef CONTROLLER_B
   ap_setup();
   control_surface_setup();
+#endif
+
+#ifdef CONTROLLER_C
+#endif
 
   while(initialized == 0) {
     initialized = read_initialization(); 
@@ -31,12 +34,20 @@ void setup() {
 
 void loop() {
   read_serial();
-  
+
+#ifdef CONTROLLER_A
+  ecam_tick();
   radio_tick();
   gear_tick();
-  ecam_tick();
+#endif
+
+#ifdef CONTROLLER_B
   ap_tick();
   control_surface_tick();
+#endif
+
+#ifdef CONTROLLER_C
+#endif
 }
 
 

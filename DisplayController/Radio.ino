@@ -160,7 +160,7 @@ Button call_button = Button(RADIO_CALL_PIN, 1);
 Button swap_freq_button = Button(RADIO_SWAP_FREQ_PIN, 1);
 Button previous_radio_button = Button(RADIO_PREVIOUS_RADIO_PIN, 1);
 Button next_radio_button = Button(RADIO_NEXT_RADIO_PIN, 1);
-PushableRotaryEncoder change_rotary_encoder = PushableRotaryEncoder(RADIO_CHANGE_ROTATE_PIN1, RADIO_CHANGE_ROTATE_PIN2, RADIO_CHANGE_PRESS_PIN, 1);
+PushableRotaryEncoder change_rotary_encoder = PushableRotaryEncoder(RADIO_CHANGE_ENCODER_PIN_A, RADIO_CHANGE_ENCODER_PIN_B, RADIO_CHANGE_BUTTON_PIN, 1);
 LiquidCrystal radio_lcd = LiquidCrystal(RADIO_LCD_PINS);
 
 RadioPage *current_radio_page = &com1_page;
