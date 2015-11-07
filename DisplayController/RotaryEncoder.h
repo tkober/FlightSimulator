@@ -28,7 +28,7 @@ class PushableRotaryEncoder {
     Button _button = Button(_buttonPin, _pullUp);
 
     int _oldState;
-    int _lastTime;
+    unsigned long _lastTime;
     int _boostCount;
     
     int _debounceFilter;

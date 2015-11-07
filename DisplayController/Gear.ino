@@ -1,3 +1,5 @@
+#ifdef CONTROLLER_A
+
 #include "Gear.h"
 #include "Pins.h"
 #include "Button.h"
@@ -163,3 +165,5 @@ void gear_down() {
   Serial.println(GEAR_DOWN);
 }
 
+
+#endif

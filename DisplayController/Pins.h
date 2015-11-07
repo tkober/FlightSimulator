@@ -174,8 +174,8 @@
 // Toglle FD
 #define TOGGLE_FD_PIN                 32
   
-// Toglle TO/GA
-#define TOGGLE_TO_GA_PIN              30
+// Toglle NAV GPS
+#define TOGGLE_NAV_GPS_PIN            30
 
 // Toglle FL Change
 #define TOGGLE_FL_CHANGE_PIN          ANALOG_PIN(15)

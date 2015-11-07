@@ -19,7 +19,7 @@ void determine_sys2_other_parameter(char token);
 
 // Public
 
-void (*token_processing)(char token) = determine_extraction_type;
+void (*token_processing)(char token) = DEFAULT_TOKEN_PROCESSING;
 int position_to_write = 0;
 
 
@@ -99,97 +99,109 @@ void determine_extraction_type(char token) {
 void determine_radio_ap_parameter(char token) {
   switch (token) {
     case COM_1_FREQ_EXTRACTION:
-      token_processing = read_com1_freq;
+      token_processing = READ_COM1_FREQ;
       break;
 
     case COM_1_SB_FREQ_EXTRACTION:
-      token_processing = read_com1_sb_freq;
+      token_processing = READ_COM1_SB_FREQ;
       break;
 
     case COM_2_FREQ_EXTRACTION:
-      token_processing = read_com2_freq;
+      token_processing = READ_COM2_FREQ;
       break;
 
     case COM_2_SB_FREQ_EXTRACTION:
-      token_processing = read_com2_sb_freq;
+      token_processing = READ_COM2_SB_FREQ;
       break;
 
     case NAV_1_FREQ_EXTRACTION:
-      token_processing = read_nav1_freq;
+      token_processing = READ_NAV1_FREQ;
       break;
 
     case NAV_1_SB_FREQ_EXTRACTION:
-      token_processing = read_nav1_sb_freq;
+      token_processing = READ_NAV1_SB_FREQ;
       break;
 
     case NAV_2_FREQ_EXTRACTION:
-      token_processing = read_nav2_freq;
+      token_processing = READ_NAV2_FREQ;
       break;
 
     case NAV_2_SB_FREQ_EXTRACTION:
-      token_processing = read_nav2_sb_freq;
+      token_processing = READ_NAV2_SB_FREQ;
       break;
 
     case TRANSPONDER_CODE_EXTRACTION:
-      token_processing = read_transponder_code;
+      token_processing = READ_TRANSPONDER_CODE;
       break;
 
     case COM_1_SOUND_ACTIVE_EXTRACTION:
-      token_processing = read_com1_sound_active;
+      token_processing = READ_COM1_SOUND_ACTIVE;
       break;
 
     case COM_2_SOUND_ACTIVE_EXTRACTION:
-      token_processing = read_com2_sound_active;
+      token_processing = READ_COM2_SOUND_ACTIVE;
       break;
 
     case NAV_1_SOUND_ACTIVE_EXTRACTION:
-      token_processing = read_nav1_sound_active;
+      token_processing = READ_NAV1_SOUND_ACTIVE;
       break;
 
     case NAV_2_SOUND_ACTIVE_EXTRACTION:
-      token_processing = read_nav2_sound_active;
+      token_processing = READ_NAV2_SOUND_ACTIVE;
       break;
 
     case AP_AIRSPEED_SET_EXTRACTION:
-      token_processing = read_speed;
+      token_processing = READ_SPEED;
       break;
 
     case AP_AIRSPEED_LOCK_ACTIVE_EXTRACTION:
-      token_processing = read_speed_active;
+      token_processing = READ_SPEED_ACTIVE;
       break;
 
     case AP_HEADING_SET_EXTRACTION:
-      token_processing = read_heading;
+      token_processing = READ_HEADING;
       break;
 
     case AP_HEADING_LOCK_ACTIVE_EXTRACTION:
-      token_processing = read_heading_active;
+      token_processing = READ_HEADING_ACTIVE;
       break;
 
     case AP_COURSE_SET_EXTRACTION:
-      token_processing = read_course;
+      token_processing = READ_COURSE;
       break;
 
     case AP_ACTIVE_EXTRACTION:
-      token_processing = read_ap_status;
+      token_processing = READ_AP_STATUS;
       break;
 
     case A_THR_ARMED_EXTRACTION:
-      token_processing = read_a_thr_status;
+      token_processing = READ_A_THR_STATUS;
       break;
 
     case AP_ALTITUDE_SET_EXTRACTION:
-      token_processing = read_altitude;
+      token_processing = READ_ALTITUDE;
       break;
 
     case AP_VERTICAL_SPEED_SET_EXTRACTION:
-      token_processing = read_vertical_speed;
+      token_processing = READ_VERTICAL_SPEED;
       break;
 
     case AP_ALTITUDE_LOCK_ACTIVE_EXTRACTION:
-      token_processing = read_altitude_active;
+      token_processing = READ_ALTITUDE_ACTIVE;
       break;
-    
+
+    case AP_APR_HOLD_ACTIVE_EXTRACTION:
+      token_processing = READ_APR_HOLD;
+      break;
+
+    case AP_NAV_HOLD_EXTRACTION:
+      token_processing = READ_NAV_HOLD;
+      break;
+
+    case AP_GLIDESLOPE_HOLD_EXTRACTION:
+      token_processing = READ_GLIDESLOPE_HOLD;
+      break;
+      
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
@@ -202,11 +214,11 @@ void determine_radio_ap_parameter(char token) {
 void determine_indication_sys1_parameter(char token) {
   switch (token) {
     case TRIM_POSITION_EXTRACTION:
-      token_processing = read_elevator_trim;
+      token_processing = READ_ELEVATOR_TRIM;
       break;
 
     case PARK_BRAKE_POSITION:
-      token_processing = read_parking_brake_status;
+      token_processing = READ_PARKING_BRAKE_STATUS;
       break;
     
     default:
@@ -221,19 +233,19 @@ void determine_indication_sys1_parameter(char token) {
 void determine_sys2_other_parameter(char token) {
   switch (token) {
     case GEAR_POSITION_EXTRACTION: 
-      token_processing = read_gear_position;
+      token_processing = READ_GEAR_POSITION;
       break;
 
     case GEAR_RETRACTABLE_EXTRACTION: 
-      token_processing = read_gear_retractable;
+      token_processing = READ_GEAR_RETRACTABLE;
       break;
 
     case RUDDER_TRIM_EXTRACTION:
-      token_processing = read_ruddert_trim;
+      token_processing = READ_RUDDERT_TRIM;
       break;
 
     case PARK_BRAKE_POSITION:
-      token_processing = read_parking_brake_status;
+      token_processing = READ_PARKING_BRAKE_STATUS;
       break;
     
     default:

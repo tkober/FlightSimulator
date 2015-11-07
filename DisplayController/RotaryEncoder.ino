@@ -79,7 +79,7 @@ void PushableRotaryEncoder::tick() {
     int direction = KNOBDIR[thisState | (_oldState<<2)];
     
     if (thisState == LATCHSTATE) {
-      int now = millis();
+      unsigned long now = millis();
       if (now - _lastTime >= _debounceFilter) {
         if (now - _lastTime <= _boostActivationInterval) {
           _boostCount++;
@@ -88,11 +88,11 @@ void PushableRotaryEncoder::tick() {
         }
         _lastTime = now;
         if (direction > 0) {
-          if (_onRotateClockwise) {
+          if (_onRotateClockwise != NULL) {
             _onRotateClockwise(_boostCount >= _boostActivationCount);
           }
         } else {
-          if (_onRotateCounterClockwise) {
+          if (_onRotateCounterClockwise != NULL) {
             _onRotateCounterClockwise(_boostCount >= _boostActivationCount);
           }
         }
@@ -100,6 +100,10 @@ void PushableRotaryEncoder::tick() {
     }
     
     _oldState = thisState;
-  } 
+  } else {
+    if (millis() - _lastTime > 2000) {
+      _oldState = LATCHSTATE;
+    }
+  }
 }
 

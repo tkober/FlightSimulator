@@ -1,3 +1,5 @@
+#ifdef CONTROLLER_A
+
 #include "ECAM.h"
 #include "Glyphs.h"
 #include "MFD.h"
@@ -303,3 +305,5 @@ void spoilers_full() {
   ecam_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
 }
 
+
+#endif

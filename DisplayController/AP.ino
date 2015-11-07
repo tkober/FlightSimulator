@@ -1,8 +1,20 @@
+#ifdef CONTROLLER_B
+
 #include "AP.h"
 #include "Pins.h"
 #include "MFD.h"
 #include "Glyphs.h"
 #include "SimConnectInputs.h"
+#include "Button.h"
+#include "RotaryEncoder.h"
+#include "Math.h"
+
+
+typedef enum {
+  AltitudeChangeHundred = 0,
+  AltitudeChangeThousand,
+  AltitudeChangeSize
+} AltitudeChange;
 
 
 void update_ap1_display();
@@ -28,6 +40,20 @@ void incrementVerticalSpeed(int boost);
 void decrementVerticalSpeed(int boost);
 void levelOff();
 
+void toggle_ap_pressed();
+void toggle_a_thr_pressed();
+
+void toggle_apr_pressed();
+void toggle_loc_pressed();
+
+void toggle_altitude_change_pressed();
+
+void toggle_flight_director_pressed();
+
+void toggle_nav_gps_pressed();
+
+int value_for_altitude_change(AltitudeChange altitudeChange);
+
 
 #define AP1_LCD_ROW_COUNT   2
 #define AP1_LCD_COL_COUNT   16
@@ -36,6 +62,15 @@ void levelOff();
 
 #define ACTIVATED_INDICATOR_GLYPH_INDEX 0
 #define ACTIVATED_INDICATOR_GLYPH       byte(ACTIVATED_INDICATOR_GLYPH_INDEX)
+
+#define GLIDESLOPE_GLYPH_INDEX          1
+#define GLIDESLOPE_GLYPH                byte(GLIDESLOPE_GLYPH_INDEX)
+
+#define NAV_HOLD_GLYPH_INDEX            1
+#define NAV_HOLD_GLYPH                  byte(NAV_HOLD_GLYPH_INDEX)
+
+#define APR_HOLD_GLYPH_INDEX            2
+#define APR_HOLD_GLYPH                  byte(APR_HOLD_GLYPH_INDEX)
 
 
 #define SPEED_SIZE                        3
@@ -55,6 +90,9 @@ char heading_hold_active[AP_COMPONENT_STATUS_SIZE]    = {'0'};
 char altitude_hold_active[AP_COMPONENT_STATUS_SIZE]   = {'0'};
 char ap_active[AP_COMPONENT_STATUS_SIZE]              = {'0'};
 char a_thr_active[AP_COMPONENT_STATUS_SIZE]           = {'0'};
+char nav_1_lock_active[AP_COMPONENT_STATUS_SIZE]      = {'0'};
+char approach_hold_active[AP_COMPONENT_STATUS_SIZE]   = {'0'};
+char glideslope_hold_active[AP_COMPONENT_STATUS_SIZE]  = {'0'};
 
 LiquidCrystal ap_lcd_1 = LiquidCrystal(AP_LCD_1_PINS);
 LiquidCrystal ap_lcd_2 = LiquidCrystal(AP_LCD_2_PINS);
@@ -65,9 +103,23 @@ PushableRotaryEncoder changeCourseRotaryEncoder = PushableRotaryEncoder(AP_CHANG
 PushableRotaryEncoder changeAltitudeRotaryEncoder = PushableRotaryEncoder(AP_CHANGE_ALT_ENCODER_PIN_A, AP_CHANGE_ALT_ENCODER_PIN_B, AP_CHANGE_ALT_BUTTON_PIN, 1);
 PushableRotaryEncoder changeVerticalSpeedRotaryEncoder = PushableRotaryEncoder(AP_CHANGE_VS_ENCODER_PIN_A, AP_CHANGE_VS_ENCODER_PIN_B, AP_CHANGE_VS_BUTTON_PIN, 1);
 
+Button toggleAPButton = Button(TOGGLE_AP_PIN, 1);
+Button toggleATHRButton = Button(TOGGLE_A_THR_PIN, 1);
+
+Button toggleAPRButton = Button(TOGGLE_APR_PIN, 1);
+Button toggleLOCButton = Button(TOGGLE_LOC_PIN, 1);
+
+Button toggleAltitudeChangeButton = Button(TOGGLE_FL_CHANGE_PIN, 1);
+
+Button toggleFlightDirectorButton = Button(TOGGLE_FD_PIN, 1);
+
+Button toggleNAVGPSButton = Button(TOGGLE_NAV_GPS_PIN, 1);
+
 int ap1_updated = 0;
 int ap2_updated = 0;
 int status_updated = 0;
+
+AltitudeChange altitudeChange = AltitudeChangeHundred;
 
 
 // Public
@@ -83,6 +135,7 @@ void ap_setup() {
     
   changeCourseRotaryEncoder.setOnRotateClockwise(incrementCourse);
   changeCourseRotaryEncoder.setOnRotateCounterClockwise(decrementCourse);
+  changeCourseRotaryEncoder.setOnClick(NULL);
     
   changeAltitudeRotaryEncoder.setOnRotateClockwise(incrementAltitude);
   changeAltitudeRotaryEncoder.setOnRotateCounterClockwise(decrementAltitude);
@@ -91,10 +144,26 @@ void ap_setup() {
   changeVerticalSpeedRotaryEncoder.setOnRotateClockwise(incrementVerticalSpeed);
   changeVerticalSpeedRotaryEncoder.setOnRotateCounterClockwise(decrementVerticalSpeed);
   changeVerticalSpeedRotaryEncoder.setOnClick(levelOff);
+
+  toggleAPButton.setOnClick(toggle_ap_pressed);
+  toggleATHRButton.setOnClick(toggle_a_thr_pressed);
+
+  toggleAPRButton.setOnClick(toggle_apr_pressed);
+  toggleLOCButton.setOnClick(toggle_loc_pressed);
+    
+  toggleAltitudeChangeButton.setOnClick(toggle_altitude_change_pressed);
+
+  toggleFlightDirectorButton.setOnClick(toggle_flight_director_pressed);
+
+  toggleNAVGPSButton.setOnClick(toggle_nav_gps_pressed);
     
   ap_lcd_1.createChar(ACTIVATED_INDICATOR_GLYPH_INDEX, ACTIVED_INDICATOR);
+  ap_lcd_1.createChar(NAV_HOLD_GLYPH_INDEX, NAV_HOLD);
+  ap_lcd_1.createChar(APR_HOLD_GLYPH_INDEX, APR_HOLD);
   ap_lcd_1.begin(AP1_LCD_COL_COUNT, AP1_LCD_ROW_COUNT);
+  
   ap_lcd_2.createChar(ACTIVATED_INDICATOR_GLYPH_INDEX, ACTIVED_INDICATOR);
+  ap_lcd_2.createChar(GLIDESLOPE_GLYPH_INDEX, GLIDESLOPE);
   ap_lcd_2.begin(AP2_LCD_COL_COUNT, AP2_LCD_ROW_COUNT);
 
   pinMode(AP_STATUS_PIN, OUTPUT);
@@ -112,6 +181,14 @@ void ap_tick() {
   changeCourseRotaryEncoder.tick();
   changeAltitudeRotaryEncoder.tick();
   changeVerticalSpeedRotaryEncoder.tick();
+  toggleAPButton.tick();
+  toggleATHRButton.tick();
+  toggleAPRButton.tick();
+  toggleLOCButton.tick();
+  toggleAltitudeChangeButton.tick();
+  toggleFlightDirectorButton.tick();
+  toggleNAVGPSButton.tick();
+  
   if (ap1_updated == 1) {
     ap1_updated = 0;
     update_ap1_display();
@@ -177,18 +254,40 @@ void read_a_thr_status(char token) {
 }
 
 
+void read_apr_hold_status(char token) {
+  store_token(token, approach_hold_active, AP_COMPONENT_STATUS_SIZE, &ap1_updated);
+}
+
+
+void read_nav_hold_status(char token) {
+  store_token(token, nav_1_lock_active, AP_COMPONENT_STATUS_SIZE, &ap1_updated);
+}
+
+
+void read_glideslope_hold_status(char token) {
+  store_token(token, glideslope_hold_active, AP_COMPONENT_STATUS_SIZE, &ap2_updated);
+}
+
+
 // Private
 
 void update_ap1_display() {
   ap_lcd_1.clear();
   ap_lcd_1.setCursor(0, 0);
-  ap_lcd_1.write("SPD   HDG   CRS ");
+  ap_lcd_1.write("SPD   HDG    CRS");
   ap_lcd_1.setCursor(0, 1);
   print_string_to_lcd(ap_lcd_1, speed, SPEED_SIZE);
   ap_lcd_1.write(speed_hold_active[0] == '1' ? ACTIVATED_INDICATOR_GLYPH : ' ');
   ap_lcd_1.write("  ");
   print_string_to_lcd(ap_lcd_1, heading, HEADING_SIZE);
   ap_lcd_1.write(heading_hold_active[0] == '1' ? ACTIVATED_INDICATOR_GLYPH : ' ');
+  if (nav_1_lock_active[0] == '1') {
+    ap_lcd_1.write(NAV_HOLD_GLYPH);
+  } else if (approach_hold_active[0] == '1') {
+    ap_lcd_1.write(APR_HOLD_GLYPH);
+  } else {
+    ap_lcd_1.write(' ');
+  }
   ap_lcd_1.write("  ");
   print_string_to_lcd(ap_lcd_1, course, COURSE_SIZE);
 }
@@ -201,8 +300,19 @@ void update_ap2_display() {
   ap_lcd_2.setCursor(0, 1);
   print_string_to_lcd(ap_lcd_2, altitude, ALTITUDE_SIZE);
   ap_lcd_2.write(altitude_hold_active[0] == '1' ? ACTIVATED_INDICATOR_GLYPH : ' ');
-  ap_lcd_2.write("    ");
+  ap_lcd_2.write(glideslope_hold_active[0] == '1' ? GLIDESLOPE_GLYPH : ' ');
+  ap_lcd_2.write("   ");
   print_string_to_lcd(ap_lcd_2, vertical_speed, VERTICAL_SPEED_SIZE);
+  switch (altitudeChange) {
+      case AltitudeChangeHundred:
+          ap_lcd_2.setCursor(2, 1);
+          break;
+            
+      case AltitudeChangeThousand:
+          ap_lcd_2.setCursor(1, 1);
+          break;
+  }
+  ap_lcd_2.cursor();
 }
 
 
@@ -214,12 +324,22 @@ void update_status_leds() {
 
 // SPD
 void incrementSpeed(int boost) {
-  Serial.println(INCREMENT_REFERENCE_SPEED);
+  int change = boost == 1 ? 10 : 1;
+  int spd = int_from_string(speed, SPEED_SIZE, 0);
+  spd += change;
+  spd = min(spd, 999);
+  Serial.write(SET_REFERENCE_SPEED);
+  Serial.println(spd);
 }
 
 
 void decrementSpeed(int boost) {
-  Serial.println(DECREMENT_REFERENCE_SPEED);
+  int change = boost == 1 ? 10 : 1;
+  int spd = int_from_string(speed, SPEED_SIZE, 0);
+  spd -= change;
+  spd = max(spd, 0);
+  Serial.write(SET_REFERENCE_SPEED);
+  Serial.println(spd);
 }
 
 
@@ -230,44 +350,90 @@ void toggleSpeedHold() {
 
 // HDG
 void incrementHeading(int boost) {
-  Serial.println(INCREMENT_REFERENCE_HEADING);
+  int change = boost == 1 ? 10 : 1;
+  int hdg = int_from_string(heading, HEADING_SIZE, 0);
+  hdg += change;
+  hdg = hdg % 360;
+  Serial.write(SET_REFERENCE_HEADING);
+  Serial.println(hdg);
 }
 
 
 void decrementHeading(int boost) {
-  Serial.println(DECREMENT_REFERENCE_HEADING);
+  int change = boost == 1 ? 10 : 1;
+  int hdg = int_from_string(heading, HEADING_SIZE, 0);
+  hdg -= change;
+  if (hdg < 1) {
+    hdg += 360;
+  }
+  Serial.write(SET_REFERENCE_HEADING);
+  Serial.println(hdg);
 }
 
 
 void toggleHeadingHold() {
-  Serial.println(TOGGLE_HEADING_HOLD);
+  if (heading_hold_active[0] == '1') {
+    Serial.println(TOGGLE_HEADING_HOLD);
+  } else {
+    int hdg = int_from_string(heading, HEADING_SIZE, 0);
+    Serial.println(TOGGLE_HEADING_HOLD);
+    Serial.write(SET_REFERENCE_HEADING);
+    Serial.println(hdg);
+  }
 }
 
 
 // CRS
 void incrementCourse(int boost) {
-  Serial.println(INCREMENT_REFERENCE_COURSE);
+  int change = boost == 1 ? 10 : 1;
+  int crs = int_from_string(course, COURSE_SIZE, 0);
+  crs += change;
+  crs = crs % 360;
+  Serial.write(SET_REFERENCE_COURSE);
+  Serial.println(crs);
 }
 
 
 void decrementCourse(int boost) {
-  Serial.println(DECREMENT_REFERENCE_COURSE);
+  int change = boost == 1 ? 10 : 1;
+  int crs = int_from_string(course, COURSE_SIZE, 0);
+  crs -= change;
+  if (crs < 1) {
+    crs += 360;
+  }
+  Serial.write(SET_REFERENCE_COURSE);
+  Serial.println(crs);
 }
 
 
 // ALT
 void incrementAltitude(int boost) {
-  Serial.println(INCREMENT_REFERENCE_ALTITUDE);
+  int alt = int_from_string(altitude, ALTITUDE_SIZE, 0);
+  alt += value_for_altitude_change(altitudeChange);
+  alt = min(alt, 99999);
+  Serial.write(SET_REFERENCE_ALTITUDE);
+  Serial.println(alt);
 }
 
 
 void decrementAltitude(int boost) {
-  Serial.println(DECREMENT_REFERENCE_ALTITUDE);
+  int alt = int_from_string(altitude, ALTITUDE_SIZE, 0);
+  alt -= value_for_altitude_change(altitudeChange);
+  alt = max(alt, 0);
+  Serial.write(SET_REFERENCE_ALTITUDE);
+  Serial.println(alt);
 }
 
 
 void toggleAlitiudeHold() {
-  Serial.println(TOGGLE_ALTITUDE_HOLD);
+  if (altitude_hold_active[0] == '1') {
+    Serial.println(TOGGLE_ALTITUDE_HOLD);
+  } else {
+    int alt = int_from_string(altitude, ALTITUDE_SIZE, 0);
+    Serial.println(TOGGLE_ALTITUDE_HOLD);
+    Serial.write(SET_REFERENCE_ALTITUDE);
+    Serial.println(alt);
+  }
 }
 
 
@@ -283,5 +449,60 @@ void decrementVerticalSpeed(int boost) {
 
 
 void levelOff() {
-
+  if (altitude_hold_active[0] == '1') {
+    Serial.println(TOGGLE_ALTITUDE_HOLD);
+    Serial.println(TOGGLE_ALTITUDE_HOLD);
+  } else {
+    Serial.println(TOGGLE_ALTITUDE_HOLD);
+  }
 }
+
+
+void toggle_ap_pressed() {
+  Serial.println(TOGGLE_AP);
+}
+
+
+void toggle_a_thr_pressed() {
+  Serial.println(TOGGLE_A_THR);
+}
+
+
+void toggle_apr_pressed() {
+  Serial.println(TOGGLE_APR);
+}
+
+
+void toggle_loc_pressed() {
+  Serial.println(TOGGLE_LOC);
+}
+
+
+void toggle_altitude_change_pressed() {
+  altitudeChange = (AltitudeChange)((altitudeChange + 1) % AltitudeChangeSize);
+  update_ap2_display();
+}
+
+
+void toggle_flight_director_pressed() {
+  Serial.println(TOGGLE_FD);
+}
+
+
+void toggle_nav_gps_pressed() {
+  Serial.println(TOGGLE_NAV_GPS);
+}
+
+
+int value_for_altitude_change(AltitudeChange altitudeChange) {
+  switch (altitudeChange) {
+    case AltitudeChangeHundred:
+      return 100;
+
+    case AltitudeChangeThousand:
+      return 1000;
+  }
+}
+
+
+#endif

@@ -1,3 +1,5 @@
+#ifdef CONTROLLER_A
+
 #include "Radio.h"
 #include "SerialReader.h"
 #include "SimConnectInputs.h"
@@ -783,3 +785,4 @@ void transponder_page_decrement() {
   }
 }
 
+#endif

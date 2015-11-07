@@ -17,3 +17,6 @@ extern void read_altitude_active(char token);
 extern void read_vertical_speed(char token);
 extern void read_ap_status(char token);
 extern void read_a_thr_status(char token);
+extern void read_apr_hold_status(char token);
+extern void read_nav_hold_status(char token);
+extern void read_glideslope_hold_status(char token);

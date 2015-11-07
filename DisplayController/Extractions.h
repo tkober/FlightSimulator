@@ -20,6 +20,11 @@
 #define AP_AIRSPEED_SET_EXTRACTION          'f'
 #define AP_HEADING_LOCK_ACTIVE_EXTRACTION   'j'
 #define AP_ALTITUDE_LOCK_ACTIVE_EXTRACTION  'k'
+#define AP_GPS_DRIVES_NAV_1_EXTRACTION      'l'
+#define AP_APR_HOLD_ACTIVE_EXTRACTION       'm'
+#define AP_NAV_HOLD_EXTRACTION              'o'
+#define AP_FD_EXTRACTION                    'q'
+#define AP_GLIDESLOPE_HOLD_EXTRACTION       'r'
 #define AP_AIRSPEED_LOCK_ACTIVE_EXTRACTION  's'
 #define A_THR_ARMED_EXTRACTION              't'
 

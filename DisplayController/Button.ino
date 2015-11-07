@@ -26,7 +26,7 @@ void Button::setClickTicks(int clickTicks)
 
 void Button::tick()
 {
-  int now = millis();
+  unsigned long now = millis();
   int triggeringState = _isPullUp == 1 ? LOW : HIGH;
   if (digitalRead(_pin) == triggeringState) {
     switch (_state) {
@@ -38,7 +38,7 @@ void Button::tick()
       case ClickStarted:
         if (_startedTime - now >= _clickTicks) {
           _state = Clicked;
-          if (_onClick) {
+          if (_onClick != NULL) {
             _onClick();
           }
         }

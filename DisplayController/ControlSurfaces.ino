@@ -1,7 +1,10 @@
+#ifdef CONTROLLER_B
+
 #include <stdlib.h>
 
 #include "ControlSurfaces.h"
 #include "Pins.h"
+#include "Glyphs.h"
 
 
 void update_elevator_trim_display();
@@ -33,8 +36,8 @@ void print_trim_indicator_to_display(LiquidCrystal lcd, int col_count, int cell_
 #define TRIM_INDICATOR_TO_SCALE_1_GLYPH   byte(TRIM_INDICATOR_TO_SCALE_1_GLYPH_INDEX)
 #define TRIM_INDICATOR_TO_SCALE_2_GLYPH   byte(TRIM_INDICATOR_TO_SCALE_2_GLYPH_INDEX)
 
-LiquidCrystal elevator_trim_lcd = LiquidCrystal(ELEVATOR_TRIM_LCD_PINS);     // Elevator trim
-LiquidCrystal rudder_trim_lcd   = LiquidCrystal(RUDDER_TRIM_LCD_PINS);       // Rudder trim
+LiquidCrystal elevator_trim_lcd = LiquidCrystal(ELEVATOR_TRIM_LCD_PINS);     
+LiquidCrystal rudder_trim_lcd   = LiquidCrystal(RUDDER_TRIM_LCD_PINS);   
 
 #define TRIM_SIZE             4
 char rudder_trim[TRIM_SIZE]   = {'-', '-', '-', '-'};
@@ -47,6 +50,7 @@ int rudder_trim_updated = 0;
 // Public
 
 void control_surface_setup() {
+  return;
   elevator_trim_lcd.createChar(TRIM_INDICATOR_POSITION_0_GLYPH_INDEX, TRIM_INDICATOR_POSITION_0);
   elevator_trim_lcd.createChar(TRIM_INDICATOR_POSITION_1_GLYPH_INDEX, TRIM_INDICATOR_POSITION_1);
   elevator_trim_lcd.createChar(TRIM_INDICATOR_POSITION_2_GLYPH_INDEX, TRIM_INDICATOR_POSITION_2);
@@ -200,3 +204,5 @@ void print_trim_indicator_to_display(LiquidCrystal lcd, int col_count, int cell_
   }
 }
 
+
+#endif

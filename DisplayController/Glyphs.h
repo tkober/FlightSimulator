@@ -4,6 +4,9 @@ extern byte SWAP_LEFT_GLYPH[8];
 extern byte SWAP_RIGHT_GLYPH[8];
 
 extern byte ACTIVED_INDICATOR[8];
+extern byte NAV_HOLD[8];
+extern byte APR_HOLD[8];
+extern byte GLIDESLOPE[8];
 
 extern byte FLAPS_TOP[8];
 extern byte FLAPS_MIDDLE[8];
