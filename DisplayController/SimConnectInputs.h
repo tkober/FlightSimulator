@@ -68,6 +68,22 @@
 #define DECREMENT_TRANSPONDER_DIGIT3 "A40"
 #define DECREMENT_TRANSPONDER_DIGIT4 "A41"
 
-#define GEAR_UP     "C01"
-#define GEAR_DOWN   "C02"
+#define GEAR_UP               "C01"
+#define GEAR_DOWN             "C02"
 #define TOGGLE_PARKING_BRAKE  "C04"
+
+#define TRIM_RUDDER_RIGHT     "C28"
+#define TRIM_RUDDER_LEFT      "C27"
+
+#define TRIM_ELEVATOR_UP      "C18"
+#define TRIM_ELEVATOR_DOWN    "C19"
+
+#define INCREMENT_FLAPS       "C14"
+#define DECREMENT_FLAPS       "C15"
+#define RETRACT_FLAPS         "C13"
+
+#define ARM_SPOILERS_ON       "C20"
+#define ARM_SPOILERS_OFF      "C21"
+
+#define EXTEND_SPOILERS       "C23"
+#define RETRACT_SPOILERS      "C24"

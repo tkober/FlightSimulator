@@ -216,6 +216,10 @@ void determine_indication_sys1_parameter(char token) {
     case TRIM_POSITION_EXTRACTION:
       token_processing = READ_ELEVATOR_TRIM;
       break;
+          
+    case SPOILERS_ARMED_EXTRACTION:
+      token_processing = READ_SPOILERS_ARMED;
+      break;
 
     case PARK_BRAKE_POSITION:
       token_processing = READ_PARKING_BRAKE_STATUS;

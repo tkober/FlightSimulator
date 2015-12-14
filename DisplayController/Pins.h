@@ -184,21 +184,23 @@
 // Flight Controls Panel
 // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Rudder LCD
-#define RUDDER_TRIM_LCD_RS_PIN        41
-#define RUDDER_TRIM_LCD_E_PIN         39  
-#define RUDDER_TRIM_LCD_D4_PIN        37
-#define RUDDER_TRIM_LCD_D5_PIN        35
-#define RUDDER_TRIM_LCD_D6_PIN        33
-#define RUDDER_TRIM_LCD_D7_PIN        31
+#define RUDDER_TRIM_LCD_RS_PIN        24
+#define RUDDER_TRIM_LCD_E_PIN         22  
+#define RUDDER_TRIM_LCD_D4_PIN        29
+#define RUDDER_TRIM_LCD_D5_PIN        27
+#define RUDDER_TRIM_LCD_D6_PIN        25
+#define RUDDER_TRIM_LCD_D7_PIN        23
+
 #define RUDDER_TRIM_LCD_PINS          RUDDER_TRIM_LCD_RS_PIN, RUDDER_TRIM_LCD_E_PIN, RUDDER_TRIM_LCD_D4_PIN, RUDDER_TRIM_LCD_D5_PIN, RUDDER_TRIM_LCD_D6_PIN, RUDDER_TRIM_LCD_D7_PIN
 
 // Elevator LCD
-#define ELEVATOR_TRIM_LCD_RS_PIN      24
-#define ELEVATOR_TRIM_LCD_E_PIN       22  
-#define ELEVATOR_TRIM_LCD_D4_PIN      29
-#define ELEVATOR_TRIM_LCD_D5_PIN      27
-#define ELEVATOR_TRIM_LCD_D6_PIN      25
-#define ELEVATOR_TRIM_LCD_D7_PIN      23
+#define ELEVATOR_TRIM_LCD_RS_PIN      41
+#define ELEVATOR_TRIM_LCD_E_PIN       39  
+#define ELEVATOR_TRIM_LCD_D4_PIN      37
+#define ELEVATOR_TRIM_LCD_D5_PIN      35
+#define ELEVATOR_TRIM_LCD_D6_PIN      33
+#define ELEVATOR_TRIM_LCD_D7_PIN      31
+
 #define ELEVATOR_TRIM_LCD_PINS        ELEVATOR_TRIM_LCD_RS_PIN, ELEVATOR_TRIM_LCD_E_PIN, ELEVATOR_TRIM_LCD_D4_PIN, ELEVATOR_TRIM_LCD_D5_PIN, ELEVATOR_TRIM_LCD_D6_PIN, ELEVATOR_TRIM_LCD_D7_PIN
 
 // Change Rudder 
@@ -222,7 +224,7 @@
 #define RETRACT_SPOILERS_PIN          4
 
 // Extend Spoilers  
-#define EXTENC_SPOILERS_PIN           3
+#define EXTEND_SPOILERS_PIN           3
 
 // Retract Flaps
 #define RETRACT_FLAPS_PIN             2

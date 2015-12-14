@@ -32,8 +32,8 @@
 #define INDICATIONS_SYSTEM_1_EXTRACTIONS    '<'
 #define FLAPS_POSITION_EXTRACTION           'G'
 #define TRIM_POSITION_EXTRACTION            'H'
-#define SPOILERS_POSITON_EXTRACTION         'i'
-#define SPOILERS_ARMED_EXTRACTION           'j'
+#define SPOILERS_POSITON_EXTRACTION         'h'
+#define SPOILERS_ARMED_EXTRACTION           'i'
 #define PARK_BRAKE_POSITION                 'q'
 
 

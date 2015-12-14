@@ -33,6 +33,7 @@ typedef struct ECAMPage {
   void (*scroll_up)();
   void (*handle_keypad_input)(char key);
 } ECAMPage;
+#define ECAM_PAGE_MAKE(_previous_page, _next_page, _will_appear, _render, _update_if_necessary, _will_disappear, _scroll_down, _scroll_up, _handle_keypad_input) {_previous_page, _next_page, _will_appear, _render, _update_if_necessary, _will_disappear, _scroll_down, _scroll_up, _handle_keypad_input}
 
 
 extern void print_string_to_lcd(LiquidCrystal lcd, char string[], int size);

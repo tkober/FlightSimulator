@@ -11,5 +11,6 @@ extern void control_surface_tick();
 
 extern void read_elevator_trim(char token);
 extern void read_ruddert_trim(char token);
+extern void controls_read_spoilers_armed(char token);
 
 #endif

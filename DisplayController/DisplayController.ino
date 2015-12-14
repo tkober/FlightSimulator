@@ -2,6 +2,15 @@
 
 #include "Prefix.h"
 
+#ifdef CONTROLLER_A
+  #include <SPI.h>
+  #include <EEPROM.h>
+  #include <boards.h>
+  #include <RBL_nRF8001.h>
+  #include <Wire.h>
+#endif
+
+
 
 int initialized = 0;
 
@@ -21,6 +30,7 @@ void setup() {
 #endif
 
 #ifdef CONTROLLER_C
+  pfd_connector_setup();
 #endif
 
   while(initialized == 0) {
@@ -47,6 +57,7 @@ void loop() {
 #endif
 
 #ifdef CONTROLLER_C
+  pfd_connector_tick();
 #endif
 }
 

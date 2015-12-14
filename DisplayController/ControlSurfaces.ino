@@ -5,11 +5,28 @@
 #include "ControlSurfaces.h"
 #include "Pins.h"
 #include "Glyphs.h"
+#include "Button.h"
+#include "RotaryEncoder.h"
+#include "SimConnectInputs.h"
 
 
 void update_elevator_trim_display();
 void update_rudder_trim_display();
 void print_trim_indicator_to_display(LiquidCrystal lcd, int col_count, int cell_width, int row, int trim_position);
+
+void trim_elevator_up(int boost);
+void trim_elevator_down(int boost);
+
+void trim_rudder_left(int boost);
+void trim_rudder_right(int boost);
+
+void increment_flaps();
+void decrement_flaps();
+void retract_flaps();
+
+void arm_spoilers();
+void extend_spoilers();
+void retract_spoilers();
 
 #define LCD_CELL_WIDTH                5
 
@@ -36,15 +53,30 @@ void print_trim_indicator_to_display(LiquidCrystal lcd, int col_count, int cell_
 #define TRIM_INDICATOR_TO_SCALE_1_GLYPH   byte(TRIM_INDICATOR_TO_SCALE_1_GLYPH_INDEX)
 #define TRIM_INDICATOR_TO_SCALE_2_GLYPH   byte(TRIM_INDICATOR_TO_SCALE_2_GLYPH_INDEX)
 
-LiquidCrystal elevator_trim_lcd = LiquidCrystal(ELEVATOR_TRIM_LCD_PINS);     
-LiquidCrystal rudder_trim_lcd   = LiquidCrystal(RUDDER_TRIM_LCD_PINS);   
-
 #define TRIM_SIZE             4
 char rudder_trim[TRIM_SIZE]   = {'-', '-', '-', '-'};
 char elevator_trim[TRIM_SIZE] = {'-', '-', '-', '-'};
 
+#define CONTROLS_STATUS_SIZE  1
+char spoilers_armed[CONTROLS_STATUS_SIZE] = {'0'};
+
+LiquidCrystal elevator_trim_lcd = LiquidCrystal(ELEVATOR_TRIM_LCD_PINS);
+LiquidCrystal rudder_trim_lcd   = LiquidCrystal(RUDDER_TRIM_LCD_PINS);
+
+PushableRotaryEncoder rudderTrimRotaryEncoder = PushableRotaryEncoder(CHANGE_RUDDER_ENCODER_PIN_A, CHANGE_RUDDER_ENCODER_PIN_B, CHANGE_RUDDER_BUTTON_PIN, 1);
+PushableRotaryEncoder elevatorTrimRotaryEncoder = PushableRotaryEncoder(CHANGE_ELEVATOR_ENCODER_PIN_A, CHANGE_ELEVATOR_ENCODER_PIN_B, CHANGE_ELEVATOR_BUTTON_PIN, 1);
+
+Button incrementFlapsButton = Button(FLAPS_SWITCH_PIN_A, 1);
+Button decrementFlapsButton = Button(FLAPS_SWITCH_PIN_B, 1);
+Button retractFlapsButton = Button(RETRACT_FLAPS_PIN, 1);
+
+Button armSpoilersButton = Button(ARM_SPOILERS_PIN, 1);
+Button extendSpoilersButton = Button(EXTEND_SPOILERS_PIN, 1);
+Button retractSpoilersButton = Button(RETRACT_SPOILERS_PIN, 1);
+
 int elevator_trim_updated = 0;
 int rudder_trim_updated = 0;
+int spoilers_updated = 0;
 
 
 // Public
@@ -70,10 +102,33 @@ void control_surface_setup() {
   rudder_trim_lcd.begin(RUDDER_TRIM_LCD_COL_COUNT, RUDDER_TRIM_LCD_ROW_COUNT);
   update_elevator_trim_display();
   update_rudder_trim_display();
+    
+  rudderTrimRotaryEncoder.setOnRotateClockwise(trim_rudder_right);
+  rudderTrimRotaryEncoder.setOnRotateCounterClockwise(trim_rudder_left);
+    
+  elevatorTrimRotaryEncoder.setOnRotateClockwise(trim_elevator_down);
+  elevatorTrimRotaryEncoder.setOnRotateCounterClockwise(trim_elevator_up);
+
+  incrementFlapsButton.setOnClick(decrement_flaps);
+  decrementFlapsButton.setOnClick(increment_flaps);
+  retractFlapsButton.setOnClick(retract_flaps);
+    
+  armSpoilersButton.setOnClick(arm_spoilers);
+  extendSpoilersButton.setOnClick(extend_spoilers);
+  retractSpoilersButton.setOnClick(retract_spoilers);
 }
 
 
 void control_surface_tick() {
+  rudderTrimRotaryEncoder.tick();
+  elevatorTrimRotaryEncoder.tick();
+  incrementFlapsButton.tick();
+  decrementFlapsButton.tick();
+  retractFlapsButton.tick();
+  armSpoilersButton.tick();
+  extendSpoilersButton.tick();
+  retractSpoilersButton.tick();
+    
   if (elevator_trim_updated == 1) {
     elevator_trim_updated = 0;
     update_elevator_trim_display();
@@ -92,6 +147,10 @@ void read_elevator_trim(char token) {
 
 void read_ruddert_trim(char token) {
   store_token(token, rudder_trim, TRIM_SIZE, &rudder_trim_updated);
+}
+
+void controls_read_spoilers_armed(char token) {
+  store_token(token, spoilers_armed, CONTROLS_STATUS_SIZE, &spoilers_updated);
 }
 
 
@@ -201,6 +260,61 @@ void print_trim_indicator_to_display(LiquidCrystal lcd, int col_count, int cell_
       lcd.write(TRIM_INDICATOR_CLEAR_GLYPH);
     }
   }
+}
+
+
+
+void trim_elevator_up(int boost) {
+  Serial.println(TRIM_ELEVATOR_UP);
+}
+
+
+void trim_elevator_down(int boost) {
+  Serial.println(TRIM_ELEVATOR_DOWN);
+}
+
+
+void trim_rudder_left(int boost) {
+  Serial.println(TRIM_RUDDER_LEFT);
+}
+
+
+void trim_rudder_right(int boost) {
+  Serial.println(TRIM_RUDDER_RIGHT);
+}
+
+
+void increment_flaps() {
+  Serial.println(INCREMENT_FLAPS);
+}
+
+
+void decrement_flaps() {
+  Serial.println(DECREMENT_FLAPS);
+}
+
+
+void retract_flaps() {
+  Serial.println(RETRACT_FLAPS);
+}
+
+
+void arm_spoilers() {
+  if (spoilers_armed[0] == '1') {
+    Serial.println(ARM_SPOILERS_OFF);
+  } else {
+    Serial.println(ARM_SPOILERS_ON);
+  }
+}
+
+
+void extend_spoilers() {
+  Serial.println(EXTEND_SPOILERS);
+}
+
+
+void retract_spoilers() {
+  Serial.println(RETRACT_SPOILERS);
 }
 
 

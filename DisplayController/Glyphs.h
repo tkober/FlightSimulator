@@ -26,3 +26,12 @@ extern byte TRIM_INDICATOR_POSITION_4[8];
 extern byte TRIM_INDICATOR_CLEAR[8];
 extern byte TRIM_INDICATOR_TO_SCALE_1[8];
 extern byte TRIM_INDICATOR_TO_SCALE_2[8];
+
+extern byte frame_upper_right[8];
+extern byte frame_upper_left[8];
+extern byte frame_bottom_right[8];
+extern byte frame_bottom_left[8];
+extern byte frame_bottom[8];
+extern byte frame_left[8];
+extern byte frame_top[8];
+extern byte frame_right[8];

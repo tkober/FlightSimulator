@@ -41,6 +41,7 @@ extern void store_token(char token, char destination[], int size, int *updated);
 #define READ_GLIDESLOPE_HOLD        DEFAULT_TOKEN_PROCESSING
 
 #define READ_ELEVATOR_TRIM          DEFAULT_TOKEN_PROCESSING
+#define READ_SPOILERS_ARMED         DEFAULT_TOKEN_PROCESSING
 #define READ_PARKING_BRAKE_STATUS   DEFAULT_TOKEN_PROCESSING
 
 #define READ_GEAR_POSITION          DEFAULT_TOKEN_PROCESSING
@@ -96,6 +97,7 @@ extern void store_token(char token, char destination[], int size, int *updated);
 // Flight Controls
 #define READ_ELEVATOR_TRIM          read_elevator_trim
 #define READ_RUDDERT_TRIM           read_ruddert_trim
+#define READ_SPOILERS_ARMED         controls_read_spoilers_armed
 
 #endif
 

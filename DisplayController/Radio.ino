@@ -97,7 +97,9 @@ void transponder_page_increment();
 void transponder_page_decrement();
 
 
-RadioPage com1_page = RADIO_PAGE_MAKE(&transponder_page, &com2_page, 
+RadioPage com1_page = RADIO_PAGE_MAKE(
+  &transponder_page,
+  &com2_page,
   com1_page_will_appeaer, 
   com1_page_render, 
   com1_page_update_if_necessary, 
@@ -107,9 +109,11 @@ RadioPage com1_page = RADIO_PAGE_MAKE(&transponder_page, &com2_page,
   com1_page_swap, 
   com1_page_increment, 
   com1_page_decrement
- );
+);
  
-RadioPage com2_page = RADIO_PAGE_MAKE(&com1_page, &nav1_page, 
+RadioPage com2_page = RADIO_PAGE_MAKE(
+  &com1_page,
+  &nav1_page,
   com2_page_will_appeaer, 
   com2_page_render, 
   com2_page_update_if_necessary, 
@@ -121,7 +125,9 @@ RadioPage com2_page = RADIO_PAGE_MAKE(&com1_page, &nav1_page,
   com2_page_decrement
 );
 
-RadioPage nav1_page = RADIO_PAGE_MAKE(&com2_page, &nav2_page, 
+RadioPage nav1_page = RADIO_PAGE_MAKE(
+  &com2_page,
+  &nav2_page,
   nav1_page_will_appeaer, 
   nav1_page_render, 
   nav1_page_update_if_necessary, 
@@ -133,7 +139,9 @@ RadioPage nav1_page = RADIO_PAGE_MAKE(&com2_page, &nav2_page,
   nav1_page_decrement
 );
 
-RadioPage nav2_page = RADIO_PAGE_MAKE(&nav1_page, &transponder_page,
+RadioPage nav2_page = RADIO_PAGE_MAKE(
+  &nav1_page,
+  &transponder_page,
   nav2_page_will_appeaer, 
   nav2_page_render, 
   nav2_page_update_if_necessary, 
@@ -145,7 +153,9 @@ RadioPage nav2_page = RADIO_PAGE_MAKE(&nav1_page, &transponder_page,
   nav2_page_decrement
 );
 
-RadioPage transponder_page = RADIO_PAGE_MAKE(&nav2_page, &com1_page,
+RadioPage transponder_page = RADIO_PAGE_MAKE(
+  &nav2_page,
+  &com1_page,
   transponder_page_will_appeaer, 
   transponder_page_render, 
   transponder_page_update_if_necessary, 
