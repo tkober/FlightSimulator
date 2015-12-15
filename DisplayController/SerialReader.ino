@@ -202,6 +202,18 @@ void determine_radio_ap_parameter(char token) {
       token_processing = READ_GLIDESLOPE_HOLD;
       break;
 
+    case HSI_CDI_NEEDLE_POSITION_EXTRACTION:
+      token_processing = READ_ILS_LOC_OFFSET;
+      break;
+
+    case HSI_GSI_NEEDLE_POSITION_EXTRACTION:
+      token_processing = READ_ILS_GS_OFFSET;
+      break;
+
+    case AP_TAKE_OFF_POWER_ACTIVE:
+      token_processing = READ_TOGA;
+      break;
+
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
@@ -221,8 +233,52 @@ void determine_indication_sys1_parameter(char token) {
       token_processing = READ_SPOILERS_ARMED;
       break;
 
-    case PARK_BRAKE_POSITION:
+    case PARK_BRAKE_POSITION_EXTRACTION:
       token_processing = READ_PARKING_BRAKE_STATUS;
+      break;
+
+    case AIRSPEED_INDICATED_EXTRACTION:
+      token_processing = READ_AIRSPEED;
+      break;
+
+    case GROUND_SPEED_EXTRACTION:
+      token_processing = READ_GROUND_SPEED;
+      break;
+
+    case ALTITUDE_EXTRACTION:
+      token_processing = READ_ALTITUDE;
+      break;
+
+    case HEADING_EXTRACTION:
+      token_processing = READ_HEADING;
+      break;
+
+    case GROUND_CLEARANCE_EXTRACTION:
+      token_processing = READ_GROUND_CLEARANCE;
+      break;
+
+    case PLANE_ON_GROUND_EXTRACTION:
+      token_processing = READ_AIRCRAFT_ON_GROUND;
+      break;
+
+    case PITCH_EXTRACTOPN:
+      token_processing = READ_PITCH;
+      break;
+
+    case ROLL_EXTRACTION:
+      token_processing = READ_ROLL;
+      break;
+
+    case STALL_WARNING_EXTRACTION:
+      token_processing = READ_STALL_WARNING;
+      break;
+
+    case G_FORCE_EXTRACTION:
+      token_processing = READ_G_FORCE;
+      break;
+
+    case ANGLE_OF_ATTACK_EXTRACTION:
+      token_processing = READ_ANGLE_OF_ATTACK;
       break;
 
     default:
@@ -250,6 +306,14 @@ void determine_sys2_other_parameter(char token) {
 
     case PARK_BRAKE_POSITION:
       token_processing = READ_PARKING_BRAKE_STATUS;
+      break;
+
+    case KOHLSMAN_SETTING_EXTRACTION:
+      token_processing = READ_ALTIMETER_SETTING;
+      break;
+
+    case OVERSPEED_WARNING_EXTRACTION:
+      token_processing = READ_OVERSPEED_WARNING;
       break;
 
     default:
