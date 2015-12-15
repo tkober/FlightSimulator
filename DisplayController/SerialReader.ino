@@ -151,19 +151,19 @@ void determine_radio_ap_parameter(char token) {
       break;
 
     case AP_AIRSPEED_SET_EXTRACTION:
-      token_processing = READ_SPEED;
+      token_processing = READ_REFERENCE_SPEED;
       break;
 
     case AP_AIRSPEED_LOCK_ACTIVE_EXTRACTION:
-      token_processing = READ_SPEED_ACTIVE;
+      token_processing = READ_SPEED_HOLD_ACTIVE;
       break;
 
     case AP_HEADING_SET_EXTRACTION:
-      token_processing = READ_HEADING;
+      token_processing = READ_REFERENCE_HEADING;
       break;
 
     case AP_HEADING_LOCK_ACTIVE_EXTRACTION:
-      token_processing = READ_HEADING_ACTIVE;
+      token_processing = READ_HEADING_HOLD_ACTIVE;
       break;
 
     case AP_COURSE_SET_EXTRACTION:
@@ -179,15 +179,15 @@ void determine_radio_ap_parameter(char token) {
       break;
 
     case AP_ALTITUDE_SET_EXTRACTION:
-      token_processing = READ_ALTITUDE;
+      token_processing = READ_REFERENCE_ALTITUDE;
       break;
 
     case AP_VERTICAL_SPEED_SET_EXTRACTION:
-      token_processing = READ_VERTICAL_SPEED;
+      token_processing = READ_REFERENCE_VERTICAL_SPEED;
       break;
 
     case AP_ALTITUDE_LOCK_ACTIVE_EXTRACTION:
-      token_processing = READ_ALTITUDE_ACTIVE;
+      token_processing = READ_ALTITUDE_HOLD_ACTIVE;
       break;
 
     case AP_APR_HOLD_ACTIVE_EXTRACTION:
@@ -201,7 +201,7 @@ void determine_radio_ap_parameter(char token) {
     case AP_GLIDESLOPE_HOLD_EXTRACTION:
       token_processing = READ_GLIDESLOPE_HOLD;
       break;
-      
+
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
@@ -216,7 +216,7 @@ void determine_indication_sys1_parameter(char token) {
     case TRIM_POSITION_EXTRACTION:
       token_processing = READ_ELEVATOR_TRIM;
       break;
-          
+
     case SPOILERS_ARMED_EXTRACTION:
       token_processing = READ_SPOILERS_ARMED;
       break;
@@ -224,7 +224,7 @@ void determine_indication_sys1_parameter(char token) {
     case PARK_BRAKE_POSITION:
       token_processing = READ_PARKING_BRAKE_STATUS;
       break;
-    
+
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
@@ -236,11 +236,11 @@ void determine_indication_sys1_parameter(char token) {
 // Type: System2 / Other
 void determine_sys2_other_parameter(char token) {
   switch (token) {
-    case GEAR_POSITION_EXTRACTION: 
+    case GEAR_POSITION_EXTRACTION:
       token_processing = READ_GEAR_POSITION;
       break;
 
-    case GEAR_RETRACTABLE_EXTRACTION: 
+    case GEAR_RETRACTABLE_EXTRACTION:
       token_processing = READ_GEAR_RETRACTABLE;
       break;
 
@@ -251,7 +251,7 @@ void determine_sys2_other_parameter(char token) {
     case PARK_BRAKE_POSITION:
       token_processing = READ_PARKING_BRAKE_STATUS;
       break;
-    
+
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
