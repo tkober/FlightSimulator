@@ -21,4 +21,4 @@ extern void pfd_read_overspeed_warning(char token);
 extern void pfd_read_stall_warning(char token);
 extern void pfd_read_g_force(char token);
 extern void pfd_read_angle_of_attack(char token);
-extern void pfd_read_toga_active(char token);
+extern void pfd_read_to_ga_active(char token);

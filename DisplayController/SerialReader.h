@@ -139,6 +139,6 @@ extern void store_token(char token, char destination[], int size, int *updated);
 #define READ_STALL_WARNING            pfd_read_stall_warning
 #define READ_G_FORCE                  pfd_read_g_force
 #define READ_ANGLE_OF_ATTACK          pfd_read_angle_of_attack
-#define READ_TOGA                     pfd_read_toga_active
+#define READ_TOGA                     pfd_read_to_ga_active
 
 #endif
