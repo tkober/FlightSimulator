@@ -53,7 +53,7 @@ int altitude_hold_active_updated       = 0;
 
 #define ANGLE_SIZE 6
 char pitch[ANGLE_SIZE]  = {'+', '0', '0', '0', '.', '0'};
-int pitch_update        = 0;
+int pitch_updated       = 0;
 
 char roll[ANGLE_SIZE] = {'+', '0', '0', '0', '.', '0'};
 int roll_updated = 0;
@@ -137,8 +137,8 @@ void pfd_connector_tick() {
     altitude_hold_active_updated = 0;
   }
 
-  if (pitch_update) {
-    pitch_update = 0;
+  if (pitch_updated) {
+    pitch_updated = 0;
   }
 
   if (roll_updated) {

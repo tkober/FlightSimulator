@@ -304,7 +304,7 @@ void determine_sys2_other_parameter(char token) {
       token_processing = READ_RUDDERT_TRIM;
       break;
 
-    case PARK_BRAKE_POSITION:
+    case PARK_BRAKE_POSITION_EXTRACTION:
       token_processing = READ_PARKING_BRAKE_STATUS;
       break;
 
