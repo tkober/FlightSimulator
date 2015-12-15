@@ -128,19 +128,19 @@ void ap_setup() {
   changeSpeedRotaryEncoder.setOnRotateClockwise(incrementSpeed);
   changeSpeedRotaryEncoder.setOnRotateCounterClockwise(decrementSpeed);
   changeSpeedRotaryEncoder.setOnClick(toggleSpeedHold);
-    
+
   changeHeadingRotaryEncoder.setOnRotateClockwise(incrementHeading);
   changeHeadingRotaryEncoder.setOnRotateCounterClockwise(decrementHeading);
   changeHeadingRotaryEncoder.setOnClick(toggleHeadingHold);
-    
+
   changeCourseRotaryEncoder.setOnRotateClockwise(incrementCourse);
   changeCourseRotaryEncoder.setOnRotateCounterClockwise(decrementCourse);
   changeCourseRotaryEncoder.setOnClick(NULL);
-    
+
   changeAltitudeRotaryEncoder.setOnRotateClockwise(incrementAltitude);
   changeAltitudeRotaryEncoder.setOnRotateCounterClockwise(decrementAltitude);
   changeAltitudeRotaryEncoder.setOnClick(toggleAlitiudeHold);
-    
+
   changeVerticalSpeedRotaryEncoder.setOnRotateClockwise(incrementVerticalSpeed);
   changeVerticalSpeedRotaryEncoder.setOnRotateCounterClockwise(decrementVerticalSpeed);
   changeVerticalSpeedRotaryEncoder.setOnClick(levelOff);
@@ -150,25 +150,25 @@ void ap_setup() {
 
   toggleAPRButton.setOnClick(toggle_apr_pressed);
   toggleLOCButton.setOnClick(toggle_loc_pressed);
-    
+
   toggleAltitudeChangeButton.setOnClick(toggle_altitude_change_pressed);
 
   toggleFlightDirectorButton.setOnClick(toggle_flight_director_pressed);
 
   toggleNAVGPSButton.setOnClick(toggle_nav_gps_pressed);
-    
+
   ap_lcd_1.createChar(ACTIVATED_INDICATOR_GLYPH_INDEX, ACTIVED_INDICATOR);
   ap_lcd_1.createChar(NAV_HOLD_GLYPH_INDEX, NAV_HOLD);
   ap_lcd_1.createChar(APR_HOLD_GLYPH_INDEX, APR_HOLD);
   ap_lcd_1.begin(AP1_LCD_COL_COUNT, AP1_LCD_ROW_COUNT);
-  
+
   ap_lcd_2.createChar(ACTIVATED_INDICATOR_GLYPH_INDEX, ACTIVED_INDICATOR);
   ap_lcd_2.createChar(GLIDESLOPE_GLYPH_INDEX, GLIDESLOPE);
   ap_lcd_2.begin(AP2_LCD_COL_COUNT, AP2_LCD_ROW_COUNT);
 
   pinMode(AP_STATUS_PIN, OUTPUT);
   pinMode(A_THR_STATUS_PIN, OUTPUT);
-    
+
   update_ap1_display();
   update_ap2_display();
   update_status_leds();
@@ -188,7 +188,7 @@ void ap_tick() {
   toggleAltitudeChangeButton.tick();
   toggleFlightDirectorButton.tick();
   toggleNAVGPSButton.tick();
-  
+
   if (ap1_updated == 1) {
     ap1_updated = 0;
     update_ap1_display();
@@ -204,22 +204,22 @@ void ap_tick() {
 }
 
 
-void read_speed(char token) {
+void read_reference_speed(char token) {
   store_token(token, speed, SPEED_SIZE, &ap1_updated);
 }
 
 
-void read_speed_active(char token) {
+void read_speed_hold_active(char token) {
   store_token(token, speed_hold_active, AP_COMPONENT_STATUS_SIZE, &ap1_updated);
 }
 
 
-void read_heading(char token) {
+void read_reference_heading(char token) {
   store_token(token, heading, HEADING_SIZE, &ap1_updated);
 }
 
 
-void read_heading_active(char token) {
+void read_heading_hold_active(char token) {
   store_token(token, heading_hold_active, AP_COMPONENT_STATUS_SIZE, &ap1_updated);
 }
 
@@ -229,17 +229,17 @@ void read_course(char token) {
 }
 
 
-void read_altitude(char token) {
+void read_reference_altitude(char token) {
   store_token(token, altitude, ALTITUDE_SIZE, &ap2_updated);
 }
 
 
-void read_altitude_active(char token) {
+void read_altitude_hold_active(char token) {
   store_token(token, altitude_hold_active, AP_COMPONENT_STATUS_SIZE, &ap2_updated);
 }
 
 
-void read_vertical_speed(char token) {
+void read_reference_vertical_speed(char token) {
   store_token(token, vertical_speed, VERTICAL_SPEED_SIZE, &ap2_updated);
 }
 
@@ -307,7 +307,7 @@ void update_ap2_display() {
       case AltitudeChangeHundred:
           ap_lcd_2.setCursor(2, 1);
           break;
-            
+
       case AltitudeChangeThousand:
           ap_lcd_2.setCursor(1, 1);
           break;

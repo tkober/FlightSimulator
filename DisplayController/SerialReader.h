@@ -80,16 +80,16 @@ extern void store_token(char token, char destination[], int size, int *updated);
 
 #ifdef CONTROLLER_B
 // AP
-#define READ_REFERENCE_SPEED          read_speed
-#define READ_SPEED_HOLD_ACTIVE        read_speed_active
-#define READ_REFERENCE_HEADING        read_heading
-#define READ_HEADING_HOLD_ACTIVE      read_heading_active
+#define READ_REFERENCE_SPEED          read_reference_speed
+#define READ_SPEED_HOLD_ACTIVE        read_speed_hold_active
+#define READ_REFERENCE_HEADING        read_reference_heading
+#define READ_HEADING_HOLD_ACTIVE      read_heading_hold_active
 #define READ_COURSE                   read_course
 #define READ_AP_STATUS                read_ap_status
 #define READ_A_THR_STATUS             read_a_thr_status
-#define READ_REFERENCE_ALTITUDE       read_altitude
-#define READ_REFERENCE_VERTICAL_SPEED read_vertical_speed
-#define READ_ALTITUDE_HOLD_ACTIVE     read_altitude_active
+#define READ_REFERENCE_ALTITUDE       read_reference_altitude
+#define READ_REFERENCE_VERTICAL_SPEED read_reference_vertical_speed
+#define READ_ALTITUDE_HOLD_ACTIVE     read_altitude_hold_active
 #define READ_APR_HOLD                 read_apr_hold_status
 #define READ_NAV_HOLD                 read_nav_hold_status
 #define READ_GLIDESLOPE_HOLD          read_glideslope_hold_status
