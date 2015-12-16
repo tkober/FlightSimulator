@@ -46,7 +46,7 @@ int aircraft_on_ground_updated        = 0;
 char ils_loc_offset[OFFSET_SIZE]  = {'+', '0', '0', '0'};
 int ils_loc_offset_updated        = 0;
 
-#define ILS_GS_OFFSET_KEY 0x08;
+#define ILS_GS_OFFSET_KEY 0x08
 char ils_gs_offset[OFFSET_SIZE] = {'+', '0', '0', '0'};
 int ils_gs_offset_updated       = 0;
 
@@ -116,61 +116,73 @@ void pfd_connector_tick() {
   if (ble_connected()) {
     if (airspeed_updated) {
       airspeed_updated = 0;
+      send_value_with_key(AIRSPEED_KEY, airspeed, SPEED_SIZE);
       goto apply_ble;
     }
 
     if (ground_speed_updated) {
       ground_speed_updated = 0;
+      send_value_with_key(GROUND_SPEED_KEY, ground_speed, SPEED_SIZE);
       goto apply_ble;
     }
 
     if (altitude_updated) {
       altitude_updated = 0;
+      send_value_with_key(ALTITUDE_KEY, altitude, ALTITUDE_SIZE);
       goto apply_ble;
     }
 
     if (heading_updated) {
       heading_updated = 0;
+      send_value_with_key(HEADING_KEY, heading, HEADING_SIZE);
       goto apply_ble;
     }
 
     if (ground_clearance_updated) {
       ground_clearance_updated = 0;
+      send_value_with_key(GROUND_CLEARANCE_KEY, ground_clearance, ALTITUDE_KEY);
       goto apply_ble;
     }
 
     if (aircraft_on_ground_updated) {
       aircraft_on_ground_updated = 0;
+      send_value_with_key(AIRCRAFT_ON_GROUND_KEY, aircraft_on_ground, STATUS_SIZE);
       goto apply_ble;
     }
 
     if (ils_loc_offset_updated) {
       ils_loc_offset_updated = 0;
+      send_value_with_key(ILS_LOC_OFFSET_KEY, ils_loc_offset, OFFSET_SIZE);
       goto apply_ble;
     }
 
     if (ils_gs_offset_updated) {
       ils_gs_offset_updated = 0;
+      send_value_with_key(ILS_GS_OFFSET_KEY, ils_gs_offset, OFFSET_SIZE);
       goto apply_ble;
     }
 
     if (reference_speed_updated) {
       reference_speed_updated = 0;
+      send_value_with_key(REFERENCE_SPEED_KEY, reference_speed, STATUS_SIZE);
       goto apply_ble;
     }
 
     if (speed_hold_active_updated) {
       speed_hold_active_updated = 0;
+      send_value_with_key(SPEED_HOLD_KEY, speed_hold_active, STATUS_SIZE);
       goto apply_ble;
     }
 
     if (reference_altitude_updated) {
       reference_altitude_updated = 0;
+      send_value_with_key(REFERENCE_ALTITUDE_KEY, reference_altitude, ALTITUDE_SIZE);
       goto apply_ble;
     }
 
     if (altitude_hold_active_updated) {
       altitude_hold_active_updated = 0;
+      send_value_with_key(ALTITUDE_HOLD_KEY, altitude_hold_active, STATUS_SIZE);
       goto apply_ble;
     }
 
@@ -188,31 +200,37 @@ void pfd_connector_tick() {
 
     if (altimeter_setting_updated) {
       altimeter_setting_updated = 0;
+      send_value_with_key(ALTIMETER_SETTING_KEY, altimeter_setting, ALTIMETER_SETTING_SIZE);
       goto apply_ble;
     }
 
     if (overspeed_warning_updated) {
       overspeed_warning_updated = 0;
+      send_value_with_key(OVERSPEED_WARNING_KEY, overspeed_warning, STATUS_SIZE);
       goto apply_ble;
     }
 
     if (stall_warning_updated) {
       stall_warning_updated = 0;
+      send_value_with_key(STALL_WARNING_KEY, stall_warning, STATUS_SIZE);
       goto apply_ble;
     }
 
     if (g_force_updated) {
       g_force_updated = 0;
+      send_value_with_key(G_FORCE_KEY, g_force, G_FORCE_SIZE);
       goto apply_ble;
     }
 
     if (angle_of_attack_updated) {
       angle_of_attack_updated = 0;
+      send_value_with_key(ANGLE_OF_ATTACK_KEY, angle_of_attack, ANGLE_OF_ATTACK_SIZE);
       goto apply_ble;
     }
 
     if (to_ga_active_updated) {
       to_ga_active_updated = 0;
+      send_value_with_key(TO_GA_ACTIVE_KEY, to_ga_active, STATUS_SIZE);
       goto apply_ble;
     }
   }
