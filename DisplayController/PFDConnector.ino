@@ -10,74 +10,100 @@
 #include "PFDConnector.h"
 
 
+extern void send_value_with_key(byte key, char *value, int size);
+
+
 #define SPEED_SIZE 3
+#define AIRSPEED_KEY 0x01
 char airspeed[SPEED_SIZE] = {'0', '0', '0'};
 int airspeed_updated      = 0;
 
+#define GROUND_SPEED_KEY 0x02
 char ground_speed[SPEED_SIZE] = {'0', '0', '0'};
 int ground_speed_updated      = 0;
 
 #define ALTITUDE_SIZE 5
+#define ALTITUDE_KEY 0x03
 char altitude[ALTITUDE_SIZE]  = {'0', '0', '0', '0', '0'};
 int altitude_updated          = 0;
 
 #define HEADING_SIZE 3
+#define HEADING_KEY 0x04
 char heading[HEADING_SIZE]  = {'0', '0', '0'};
 int heading_updated         = 0;
 
+#define GROUND_CLEARANCE_KEY 0x05
 char ground_clearance[ALTITUDE_SIZE]  = {'0', '0', '0', '0', '0'};
 int ground_clearance_updated          = 0;
 
 #define STATUS_SIZE 1
+#define AIRCRAFT_ON_GROUND_KEY 0x06
 char aircraft_on_ground[STATUS_SIZE]  = {'0'};
 int aircraft_on_ground_updated        = 0;
 
 #define OFFSET_SIZE 4
+#define ILS_LOC_OFFSET_KEY 0x07
 char ils_loc_offset[OFFSET_SIZE]  = {'+', '0', '0', '0'};
 int ils_loc_offset_updated        = 0;
 
+#define ILS_GS_OFFSET_KEY 0x08;
 char ils_gs_offset[OFFSET_SIZE] = {'+', '0', '0', '0'};
 int ils_gs_offset_updated       = 0;
 
+#define REFERENCE_SPEED_KEY 0x09
 char reference_speed[SPEED_SIZE]  = {'0', '0', '0'};
 int reference_speed_updated       = 0;
 
+#define SPEED_HOLD_KEY 0x0A
 char speed_hold_active[STATUS_SIZE] = {'0'};
 int speed_hold_active_updated       = 0;
 
+#define REFERENCE_ALTITUDE_KEY 0x0B
 char reference_altitude[ALTITUDE_SIZE]  = {'0', '0', '0', '0', '0'};
 int reference_altitude_updated          = 0;
 
+#define ALTITUDE_HOLD_KEY 0x0C
 char altitude_hold_active[STATUS_SIZE] = {'0'};
 int altitude_hold_active_updated       = 0;
 
 #define ANGLE_SIZE 6
+#define PITCH_KEY 0x0D
 char pitch[ANGLE_SIZE]  = {'+', '0', '0', '0', '.', '0'};
 int pitch_updated       = 0;
 
+#define ROLL_KEY 0x0E
 char roll[ANGLE_SIZE] = {'+', '0', '0', '0', '.', '0'};
 int roll_updated = 0;
 
 #define ALTIMETER_SETTING_SIZE 5
+#define ALTIMETER_SETTING_KEY 0x0F
 char altimeter_setting[ALTIMETER_SETTING_SIZE]  = {'0', '0', '.', '0', '0'};
 int altimeter_setting_updated                   = 0;
 
+#define OVERSPEED_WARNING_KEY 0x10
 char overspeed_warning[STATUS_SIZE] = {'0'};
 int overspeed_warning_updated       = 0;
 
+#define STALL_WARNING_KEY 0x11
 char stall_warning[STATUS_SIZE] = {'0'};
 int stall_warning_updated       = 0;
 
 #define G_FORCE_SIZE 6
+#define G_FORCE_KEY 0x12
 char g_force[G_FORCE_SIZE]  = {'+', '0', '0', '.', '0', '0'};
 int g_force_updated         = 0;
 
 #define ANGLE_OF_ATTACK_SIZE 5
+#define ANGLE_OF_ATTACK_KEY 0x13
 char angle_of_attack[ANGLE_OF_ATTACK_SIZE]  = {'0', '0', '.', '0', '0'};
 int angle_of_attack_updated                 = 0;
 
+#define TO_GA_ACTIVE_KEY 0x14
 char to_ga_active[STATUS_SIZE]  = {'0'};
 int to_ga_active_updated        = 0;
+
+
+#define MESSAGE_BUFFER_SIZE 10
 
 
 void pfd_connector_setup() {
@@ -87,90 +113,123 @@ void pfd_connector_setup() {
 
 
 void pfd_connector_tick() {
+  if (ble_connected()) {
+    if (airspeed_updated) {
+      airspeed_updated = 0;
+      goto apply_ble;
+    }
+
+    if (ground_speed_updated) {
+      ground_speed_updated = 0;
+      goto apply_ble;
+    }
+
+    if (altitude_updated) {
+      altitude_updated = 0;
+      goto apply_ble;
+    }
+
+    if (heading_updated) {
+      heading_updated = 0;
+      goto apply_ble;
+    }
+
+    if (ground_clearance_updated) {
+      ground_clearance_updated = 0;
+      goto apply_ble;
+    }
+
+    if (aircraft_on_ground_updated) {
+      aircraft_on_ground_updated = 0;
+      goto apply_ble;
+    }
+
+    if (ils_loc_offset_updated) {
+      ils_loc_offset_updated = 0;
+      goto apply_ble;
+    }
+
+    if (ils_gs_offset_updated) {
+      ils_gs_offset_updated = 0;
+      goto apply_ble;
+    }
+
+    if (reference_speed_updated) {
+      reference_speed_updated = 0;
+      goto apply_ble;
+    }
+
+    if (speed_hold_active_updated) {
+      speed_hold_active_updated = 0;
+      goto apply_ble;
+    }
+
+    if (reference_altitude_updated) {
+      reference_altitude_updated = 0;
+      goto apply_ble;
+    }
+
+    if (altitude_hold_active_updated) {
+      altitude_hold_active_updated = 0;
+      goto apply_ble;
+    }
+
+    if (pitch_updated) {
+      pitch_updated = 0;
+      send_value_with_key(PITCH_KEY, pitch, ANGLE_SIZE);
+      goto apply_ble;
+    }
+
+    if (roll_updated) {
+      roll_updated = 0;
+      send_value_with_key(ROLL_KEY, roll, ANGLE_SIZE);
+      goto apply_ble;
+    }
+
+    if (altimeter_setting_updated) {
+      altimeter_setting_updated = 0;
+      goto apply_ble;
+    }
+
+    if (overspeed_warning_updated) {
+      overspeed_warning_updated = 0;
+      goto apply_ble;
+    }
+
+    if (stall_warning_updated) {
+      stall_warning_updated = 0;
+      goto apply_ble;
+    }
+
+    if (g_force_updated) {
+      g_force_updated = 0;
+      goto apply_ble;
+    }
+
+    if (angle_of_attack_updated) {
+      angle_of_attack_updated = 0;
+      goto apply_ble;
+    }
+
+    if (to_ga_active_updated) {
+      to_ga_active_updated = 0;
+      goto apply_ble;
+    }
+  }
+
+apply_ble:
   ble_do_events();
-
-  if (airspeed_updated) {
-    airspeed_updated = 0;
-  }
-
-  if (ground_speed_updated) {
-    ground_speed_updated = 0;
-  }
-
-  if (altitude_updated) {
-    altitude_updated = 0;
-  }
-
-  if (heading_updated) {
-    heading_updated = 0;
-  }
-
-  if (ground_clearance_updated) {
-    ground_clearance_updated = 0;
-  }
-
-  if (aircraft_on_ground_updated) {
-    aircraft_on_ground_updated = 0;
-  }
-
-  if (ils_loc_offset_updated) {
-    ils_loc_offset_updated = 0;
-  }
-
-  if (ils_gs_offset_updated) {
-    ils_gs_offset_updated = 0;
-  }
-
-  if (reference_speed_updated) {
-    reference_speed_updated = 0;
-  }
-
-  if (speed_hold_active_updated) {
-    speed_hold_active_updated = 0;
-  }
-
-  if (reference_altitude_updated) {
-    reference_altitude_updated = 0;
-  }
-
-  if (altitude_hold_active_updated) {
-    altitude_hold_active_updated = 0;
-  }
-
-  if (pitch_updated) {
-    pitch_updated = 0;
-  }
-
-  if (roll_updated) {
-    roll_updated = 0;
-  }
-
-  if (altimeter_setting_updated) {
-    altimeter_setting_updated = 0;
-  }
-
-  if (overspeed_warning_updated) {
-    overspeed_warning_updated = 0;
-  }
-
-  if (stall_warning_updated) {
-    stall_warning_updated = 0;
-  }
-
-  if (g_force_updated) {
-    g_force_updated = 0;
-  }
-
-  if (angle_of_attack_updated) {
-    angle_of_attack_updated = 0;
-  }
-
-  if (to_ga_active_updated) {
-    to_ga_active_updated = 0;
-  }
 }
 
 
+void send_value_with_key(byte key, char *value, int size) {
+  uint8_t message[size+1];
+  message[0] = key;
+  for (int i = 1; i <= size; i++) {
+    message[i] = value[i-1];
+  }
+  ble_write_bytes(message, size+1);
+}
 
 
 void pfd_read_airspeed(char token) {

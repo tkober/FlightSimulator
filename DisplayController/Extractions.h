@@ -43,7 +43,7 @@
 #define ANGLE_OF_ATTACK_EXTRACTION          'K'
 #define GROUND_SPEED_EXTRACTION             'O'
 #define AIRSPEED_INDICATED_EXTRACTION       'P'
-#define PITCH_EXTRACTOPN                    'Q'
+#define PITCH_EXTRACTOIN                    'Q'
 #define ROLL_EXTRACTION                     'R'
 #define STALL_WARNING_EXTRACTION            'S'
 #define SPOILERS_POSITON_EXTRACTION         'h'

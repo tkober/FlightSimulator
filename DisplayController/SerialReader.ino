@@ -261,7 +261,7 @@ void determine_indication_sys1_parameter(char token) {
       token_processing = READ_AIRCRAFT_ON_GROUND;
       break;
 
-    case PITCH_EXTRACTOPN:
+    case PITCH_EXTRACTOIN:
       token_processing = READ_PITCH;
       break;
 
