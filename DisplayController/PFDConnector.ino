@@ -140,7 +140,7 @@ void pfd_connector_tick() {
 
     if (ground_clearance_updated) {
       ground_clearance_updated = 0;
-      send_value_with_key(GROUND_CLEARANCE_KEY, ground_clearance, ALTITUDE_KEY);
+      send_value_with_key(GROUND_CLEARANCE_KEY, ground_clearance, ALTITUDE_SIZE);
       goto apply_ble;
     }
 
