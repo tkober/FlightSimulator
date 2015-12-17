@@ -34,7 +34,7 @@ void setup() {
 #endif
 
   while(initialized == 0) {
-    initialized = read_initialization(); 
+    initialized = read_initialization();
   }
   initialized = 0;
   while(initialized == 0) {
@@ -60,5 +60,3 @@ void loop() {
   pfd_connector_tick();
 #endif
 }
-
-

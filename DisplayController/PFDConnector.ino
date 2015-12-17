@@ -164,7 +164,7 @@ void pfd_connector_tick() {
 
     if (reference_speed_updated) {
       reference_speed_updated = 0;
-      send_value_with_key(REFERENCE_SPEED_KEY, reference_speed, STATUS_SIZE);
+      send_value_with_key(REFERENCE_SPEED_KEY, reference_speed, SPEED_SIZE);
       goto apply_ble;
     }
 
