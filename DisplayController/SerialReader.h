@@ -13,6 +13,10 @@ extern void store_token(char token, char destination[], int size, int *updated);
 
 #define DEFAULT_TOKEN_PROCESSING      determine_extraction_type
 
+#define READ_FLAPS_POSITION           DEFAULT_TOKEN_PROCESSING
+#define READ_SPOILERS_POSITION        DEFAULT_TOKEN_PROCESSING
+#define READ_SPOILERS_ARMED           DEFAULT_TOKEN_PROCESSING
+
 #define READ_COM1_FREQ                DEFAULT_TOKEN_PROCESSING
 #define READ_COM1_SB_FREQ             DEFAULT_TOKEN_PROCESSING
 #define READ_COM2_FREQ                DEFAULT_TOKEN_PROCESSING
@@ -41,7 +45,6 @@ extern void store_token(char token, char destination[], int size, int *updated);
 #define READ_GLIDESLOPE_HOLD          DEFAULT_TOKEN_PROCESSING
 
 #define READ_ELEVATOR_TRIM            DEFAULT_TOKEN_PROCESSING
-#define READ_SPOILERS_ARMED           DEFAULT_TOKEN_PROCESSING
 #define READ_PARKING_BRAKE_STATUS     DEFAULT_TOKEN_PROCESSING
 
 #define READ_GEAR_POSITION            DEFAULT_TOKEN_PROCESSING
@@ -70,6 +73,9 @@ extern void store_token(char token, char destination[], int size, int *updated);
 
 #ifdef CONTROLLER_A
 // ECAM
+#define READ_FLAPS_POSITION           read_flaps_position
+#define READ_SPOILERS_POSITION        read_spoilers_position
+#define READ_SPOILERS_ARMED           read_spoilers_armed
 
 // Radio
 #define READ_COM1_FREQ                read_com1_freq

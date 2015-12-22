@@ -225,12 +225,20 @@ void determine_radio_ap_parameter(char token) {
 // Type: Indication / System1
 void determine_indication_sys1_parameter(char token) {
   switch (token) {
-    case TRIM_POSITION_EXTRACTION:
-      token_processing = READ_ELEVATOR_TRIM;
+    case FLAPS_POSITION_EXTRACTION:
+      token_processing = READ_FLAPS_POSITION;
+      break;
+
+    case SPOILERS_POSITON_EXTRACTION:
+      token_processing = READ_SPOILERS_POSITION;
       break;
 
     case SPOILERS_ARMED_EXTRACTION:
       token_processing = READ_SPOILERS_ARMED;
+      break;
+
+    case TRIM_POSITION_EXTRACTION:
+      token_processing = READ_ELEVATOR_TRIM;
       break;
 
     case PARK_BRAKE_POSITION_EXTRACTION:

@@ -8,7 +8,7 @@
                           void (*will_appear)();                \
                           void (*render)();                     \
                           void (*update_if_necessary)();        \
-                          void (*will_disappear)();             
+                          void (*will_disappear)();
 
 
 typedef struct MFDPage {

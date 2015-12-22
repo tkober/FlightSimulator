@@ -6,6 +6,7 @@
 #include "Keypad.h"
 #include "Button.h"
 #include "Pins.h"
+#include "Math.h"
 
 
 void keypad_tick();
@@ -74,7 +75,7 @@ ECAMPage in_flight_settings_page = ECAM_PAGE_MAKE(
 #define ECAM_LCD_COL_COUNT   20
 
 #define FLAPS_TOP_INDEX                 0
-#define FLAPS_MIDDLE_INDEX              1 
+#define FLAPS_MIDDLE_INDEX              1
 #define FLAPS_BOTTOM_INDEX              2
 #define SPOILER_BOTTOM_RETRACTED_INDEX  3
 #define SPOILER_BOTTOM_1_INDEX          4
@@ -127,11 +128,9 @@ void ecam_setup() {
   previousPageButton.setOnClick(previous_ecam);
   scrollUpButton.setOnClick(scroll_up);
   scrollDownButton.setOnClick(scroll_down);
-  
-  if (current_ecam_page->update_if_necessary != NULL) {
-    current_ecam_page->update_if_necessary();
-  }
-
+  ecam2_lcd.begin(ECAM_LCD_COL_COUNT, ECAM_LCD_ROW_COUNT);
+  ecam1_lcd.begin(ECAM_LCD_COL_COUNT, ECAM_LCD_ROW_COUNT);
+  ecam2_force_rerender();
   ecam1_lcd.write("ECAM 1");
 }
 
@@ -142,6 +141,9 @@ void ecam_tick() {
   previousPageButton.tick();
   scrollUpButton.tick();
   scrollDownButton.tick();
+  if (current_ecam_page->update_if_necessary != NULL) {
+    current_ecam_page->update_if_necessary();
+  }
 }
 
 
@@ -171,12 +173,24 @@ void keypad_tick() {
 
 
 void previous_ecam() {
-  Serial.println("previous_ecam()");
+  current_ecam_page = (ECAMPage *)current_ecam_page->previous_page;
+  ecam2_force_rerender();
 }
 
 
 void next_ecam() {
-  Serial.println("next_ecam()");
+  current_ecam_page = (ECAMPage *)current_ecam_page->next_page;
+  ecam2_force_rerender();
+}
+
+
+void ecam2_force_rerender() {
+  if (current_ecam_page->will_appear) {
+    current_ecam_page->will_appear();
+  }
+  if (current_ecam_page->render) {
+    current_ecam_page->render();
+  }
 }
 
 
@@ -200,7 +214,6 @@ void control_surfaces_page_will_appear() {
   ecam2_lcd.createChar(SPOILER_BOTTOM_2_INDEX, SPOILER_BOTTOM_2);
   ecam2_lcd.createChar(SPOILER_BOTTOM_FULL_INDEX, SPOILER_BOTTOM_FULL);
   ecam2_lcd.createChar(SPOILER_TOP_FULL_INDEX, SPOILER_TOP_FULL);
-  ecam2_lcd.begin(ECAM_LCD_COL_COUNT, ECAM_LCD_ROW_COUNT);
   ecam2_lcd.clear();
 }
 
@@ -212,25 +225,58 @@ void control_surfaces_page_render() {
 
 
 void control_surfaces_page_update_if_necessary() {
-  if (flaps_updated == 1 || spoilers_updated == 1) {
+  if (control_surfaces_updated == 1) {
     control_surfaces_page_render();
+    control_surfaces_updated = 0;
   }
 }
 
 
 void render_spoilers() {
-  spoilers_full();
+  ecam2_lcd.setCursor(0, 0);
+  int spoilers = int_from_string(spoilers_position, SPOILERS_POSITION_SIZE, 0);
+  int armed = int_from_string(spoilers_armed, SPOILERS_ARMED_SIZE, 0);
+  if (spoilers == 0) {
+    render_spoilers_retracted(spoilers, armed);
+  } else if (spoilers <= 50) {
+    render_spoilers_1(spoilers, armed);
+  } else if (spoilers <= 75) {
+    render_spoilers_2(spoilers, armed);
+  } else {
+    render_spoilers_full(spoilers, armed);
+  }
 }
 
 
 void render_flaps() {
-  flaps_full();
+  ecam2_lcd.setCursor(0, 2);
+  ecam2_lcd.print("Flaps            ");
+  int flaps = int_from_string(flaps_position, FLAPS_POSITION_SIZE, 0);
+  if (flaps < 10) {
+    ecam2_lcd.print("  ");
+  } else if (flaps < 99) {
+    ecam2_lcd.print(" ");
+  }
+  ecam2_lcd.print(flaps);
+  ecam2_lcd.setCursor(0, 3);
+
+  if (flaps < 14) {
+    render_flaps_up();
+  } else if (flaps < 21) {
+    render_flaps_1();
+  } else if (flaps < 29) {
+    render_flaps_2();
+  } else if (flaps < 57) {
+    render_flaps_3();
+  } else {
+    render_flaps_full();
+  }
 }
 
 
 // Fuel
 void fuel_page_will_appear() {
-    
+  ecam2_lcd.clear();
 }
 
 
@@ -249,7 +295,7 @@ void fuel_page_update_if_necessary() {
 
 // In Flight Settings
 void in_flight_settings_page_will_appear() {
-    
+  ecam2_lcd.clear();
 }
 
 
@@ -260,48 +306,29 @@ void in_flight_settings_page_render() {
 
 
 void in_flight_settings_page_update_if_necessary() {
-    
+
 }
 
 
 void in_flight_settings_page_scroll_down() {
-    
+
 }
 
 
 void in_flight_settings_page_scroll_up() {
-    
+
 }
 
 
 void in_flight_settings_page_handle_keypad_input(char key) {
-    
+
 }
 
 
+// Flaps
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-// TEST ONLY
-
-void flaps_up() {
-  ecam2_lcd.setCursor(0, 2);
-  ecam2_lcd.print("Flaps             0%");
-  ecam2_lcd.setCursor(0, 3);
-  ecam2_lcd.print("Up");
+void render_flaps_up() {
+  ecam2_lcd.print("Up  ");
   ecam2_lcd.setCursor(12, 3);
   ecam2_lcd.write(FLAPS_TOP_GLYPH);
   ecam2_lcd.write(FLAPS_TOP_GLYPH);
@@ -314,11 +341,8 @@ void flaps_up() {
 }
 
 
-void flaps_1() {
-  ecam2_lcd.setCursor(0, 2);
-  ecam2_lcd.print("Flaps           25%");
-  ecam2_lcd.setCursor(0, 3);
-  ecam2_lcd.print("1");
+void render_flaps_1() {
+  ecam2_lcd.print("1   ");
   ecam2_lcd.setCursor(12, 3);
   ecam2_lcd.write(FLAPS_TOP_GLYPH);
   ecam2_lcd.write(FLAPS_TOP_GLYPH);
@@ -331,11 +355,8 @@ void flaps_1() {
 }
 
 
-void flaps_2() {
-  ecam2_lcd.setCursor(0, 2);
-  ecam2_lcd.print("Flaps            50%");
-  ecam2_lcd.setCursor(0, 3);
-  ecam2_lcd.print("2");
+void render_flaps_2() {
+  ecam2_lcd.print("2   ");
   ecam2_lcd.setCursor(12, 3);
   ecam2_lcd.write(FLAPS_TOP_GLYPH);
   ecam2_lcd.write(FLAPS_TOP_GLYPH);
@@ -348,11 +369,8 @@ void flaps_2() {
 }
 
 
-void flaps_3() {
-  ecam2_lcd.setCursor(0, 2);
-  ecam2_lcd.print("Flaps            75%");
-  ecam2_lcd.setCursor(0, 3);
-  ecam2_lcd.print("3");
+void render_flaps_3() {
+  ecam2_lcd.print("3   ");
   ecam2_lcd.setCursor(12, 3);
   ecam2_lcd.write(FLAPS_MIDDLE_GLYPH);
   ecam2_lcd.write(FLAPS_TOP_GLYPH);
@@ -365,10 +383,7 @@ void flaps_3() {
 }
 
 
-void flaps_full() {
-  ecam2_lcd.setCursor(0, 2);
-  ecam2_lcd.print("Flaps           100%");
-  ecam2_lcd.setCursor(0, 3);
+void render_flaps_full() {
   ecam2_lcd.print("Full");
   ecam2_lcd.setCursor(12, 3);
   ecam2_lcd.write(FLAPS_BOTTOM_GLYPH);
@@ -382,8 +397,9 @@ void flaps_full() {
 }
 
 
-void spoilers_retracted() {
-  ecam2_lcd.setCursor(0, 0);
+// Spoilers
+
+void render_spoilers_retracted(int percent, int armed) {
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
@@ -395,14 +411,15 @@ void spoilers_retracted() {
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
-  
+
   ecam2_lcd.setCursor(0, 1);
   ecam2_lcd.write(SPOILER_BOTTOM_RETRACTED_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_RETRACTED_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_RETRACTED_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_RETRACTED_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_RETRACTED_GLYPH);
-  ecam2_lcd.print(" ARM   0% ");
+  render_spoilers_armed(armed);
+  render_spoilers_percent(percent);
   ecam2_lcd.write(SPOILER_BOTTOM_RETRACTED_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_RETRACTED_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_RETRACTED_GLYPH);
@@ -411,8 +428,7 @@ void spoilers_retracted() {
 }
 
 
-void spoilers_1() {
-  ecam2_lcd.setCursor(0, 0);
+void render_spoilers_1(int percent, int armed) {
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
@@ -424,14 +440,15 @@ void spoilers_1() {
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
-  
+
   ecam2_lcd.setCursor(0, 1);
   ecam2_lcd.write(SPOILER_BOTTOM_1_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_1_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_1_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_1_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_1_GLYPH);
-  ecam2_lcd.print(" ARM  25% ");
+  render_spoilers_armed(armed);
+  render_spoilers_percent(percent);
   ecam2_lcd.write(SPOILER_BOTTOM_1_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_1_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_1_GLYPH);
@@ -440,8 +457,7 @@ void spoilers_1() {
 }
 
 
-void spoilers_2() {
-  ecam2_lcd.setCursor(0, 0);
+void render_spoilers_2(int percent, int armed) {
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
@@ -453,14 +469,15 @@ void spoilers_2() {
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
   ecam2_lcd.write(' ');
-  
+
   ecam2_lcd.setCursor(0, 1);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
-  ecam2_lcd.print(" ARM  50% ");
+  render_spoilers_armed(armed);
+  render_spoilers_percent(percent);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
@@ -469,8 +486,7 @@ void spoilers_2() {
 }
 
 
-void spoilers_full() {
-  ecam2_lcd.setCursor(0, 0);
+void render_spoilers_full(int percent, int armed) {
   ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
@@ -482,19 +498,40 @@ void spoilers_full() {
   ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  
+
   ecam2_lcd.setCursor(0, 1);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  ecam2_lcd.print(" ARM 100% ");
+  render_spoilers_armed(armed);
+  render_spoilers_percent(percent);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
+}
+
+
+void render_spoilers_armed(int armed) {
+  if (armed) {
+    ecam2_lcd.print(" ARM ");
+  } else {
+    ecam2_lcd.print("     ");
+  }
+}
+
+
+void render_spoilers_percent(int percent) {
+  if (percent < 10) {
+    ecam2_lcd.print("  ");
+  } else if (percent < 100) {
+    ecam2_lcd.print(" ");
+  }
+  ecam2_lcd.print(percent);
+  ecam2_lcd.print("% ");
 }
 
 
