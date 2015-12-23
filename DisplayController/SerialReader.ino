@@ -289,6 +289,22 @@ void determine_indication_sys1_parameter(char token) {
       token_processing = READ_ANGLE_OF_ATTACK;
       break;
 
+    case ENGINE_1_RPM:
+      token_processing = READ_ENGINE_1_RPM;
+      break;
+
+    case ENGINE_2_RPM:
+      token_processing = READ_ENGINE_2_RPM;
+      break;
+
+    case THROTTLE_1_POSITION:
+      token_processing = READ_THROTTLE_POSITION_1;
+      break;
+
+    case THROTTLE_2_POSITION:
+      token_processing = READ_THROTTLE_POSITION_2;
+      break;
+
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
@@ -322,6 +338,22 @@ void determine_sys2_other_parameter(char token) {
 
     case OVERSPEED_WARNING_EXTRACTION:
       token_processing = READ_OVERSPEED_WARNING;
+      break;
+
+    case EGT_ENGINE_1:
+      token_processing = READ_EGT_ENGINE_1;
+      break;
+
+    case EGT_ENGINE_2:
+      token_processing = READ_EGT_ENGINE_2;
+      break;
+
+    case FUEL_FLOW_ENGINE_1:
+      token_processing = READ_FUEL_FLOW_ENGINE_1;
+      break;
+
+    case FUEL_FLOW_ENGINE_2:
+      token_processing = READ_FUEL_FLOW_ENGINE_2;
       break;
 
     default:

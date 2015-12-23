@@ -69,10 +69,30 @@ extern void store_token(char token, char destination[], int size, int *updated);
 #define READ_ANGLE_OF_ATTACK          DEFAULT_TOKEN_PROCESSING
 #define READ_TOGA                     DEFAULT_TOKEN_PROCESSING
 
+#define READ_ENGINE_1_RPM             DEFAULT_TOKEN_PROCESSING
+#define READ_ENGINE_2_RPM             DEFAULT_TOKEN_PROCESSING
+#define READ_THROTTLE_POSITION_1      DEFAULT_TOKEN_PROCESSING
+#define READ_THROTTLE_POSITION_2      DEFAULT_TOKEN_PROCESSING
+
+#define READ_EGT_ENGINE_1             DEFAULT_TOKEN_PROCESSING
+#define READ_EGT_ENGINE_2             DEFAULT_TOKEN_PROCESSING
+#define READ_FUEL_FLOW_ENGINE_1       DEFAULT_TOKEN_PROCESSING
+#define READ_FUEL_FLOW_ENGINE_2       DEFAULT_TOKEN_PROCESSING
+
 
 
 #ifdef CONTROLLER_A
-// ECAM
+// ECAM 1
+#define READ_ENGINE_1_RPM             read_n1_engine1
+#define READ_ENGINE_2_RPM             read_n1_engine2
+#define READ_THROTTLE_POSITION_1      read_thrust_levers_position_engine1
+#define READ_THROTTLE_POSITION_2      read_thrust_levers_position_engine2
+#define READ_EGT_ENGINE_1             read_egt_engine1
+#define READ_EGT_ENGINE_2             read_egt_engine2
+#define READ_FUEL_FLOW_ENGINE_1       read_fuel_flow_engine1
+#define READ_FUEL_FLOW_ENGINE_2       read_fuel_flow_engine2
+
+// ECAM 2
 #define READ_FLAPS_POSITION           read_flaps_position
 #define READ_SPOILERS_POSITION        read_spoilers_position
 #define READ_SPOILERS_ARMED           read_spoilers_armed

@@ -27,11 +27,20 @@ extern byte TRIM_INDICATOR_CLEAR[8];
 extern byte TRIM_INDICATOR_TO_SCALE_1[8];
 extern byte TRIM_INDICATOR_TO_SCALE_2[8];
 
-extern byte frame_upper_right[8];
-extern byte frame_upper_left[8];
-extern byte frame_bottom_right[8];
-extern byte frame_bottom_left[8];
-extern byte frame_bottom[8];
-extern byte frame_left[8];
-extern byte frame_top[8];
-extern byte frame_right[8];
+extern byte FRAME_UPPER_RIGHT[8];
+extern byte FRAME_UPPER_LEFT[8];
+extern byte FRAME_BOTTOM_RIGHT[8];
+extern byte FRAME_BOTTOM_LEFT[8];
+extern byte FRAME_BOTTOM[8];
+extern byte FRAME_LEFT[8];
+extern byte FRAME_TOP[8];
+extern byte FRAME_RIGHT[8];
+
+extern byte THRUST_LEVERS_POSITION_0[8];
+extern byte THRUST_LEVERS_POSITION_1[8];
+extern byte THRUST_LEVERS_POSITION_2[8];
+extern byte THRUST_LEVERS_POSITION_3[8];
+extern byte THRUST_LEVERS_POSITION_4[8];
+extern byte THRUST_LEVERS_POSITION_5[8];
+extern byte THRUST_LEVERS_POSITION_6[8];
+extern byte THRUST_LEVERS_POSITION_7[8];

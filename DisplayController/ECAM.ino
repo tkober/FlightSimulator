@@ -16,6 +16,12 @@ void next_ecam();
 void scroll_up();
 void scroll_down();
 
+void render_ecam_1();
+void render_labels();
+void render_engine_1(int n1, int egt, int ff, int thr);
+void render_engine_2(int n1, int egt, int ff, int thr);
+void render_thrust_lever(int col, int thr);
+
 extern ECAMPage control_surfaces_page;
 void control_surfaces_page_will_appear();
 void control_surfaces_page_render();
@@ -92,12 +98,45 @@ ECAMPage in_flight_settings_page = ECAM_PAGE_MAKE(
 #define SPOILER_BOTTOM_FULL_GLYPH       byte(SPOILER_BOTTOM_FULL_INDEX)
 #define SPOILER_TOP_FULL_GLYPH          byte(SPOILER_TOP_FULL_INDEX)
 
+
+#define THRUST_LEVERS_0_INDEX           0
+#define THRUST_LEVERS_1_INDEX           1
+#define THRUST_LEVERS_2_INDEX           2
+#define THRUST_LEVERS_3_INDEX           3
+#define THRUST_LEVERS_4_INDEX           4
+#define THRUST_LEVERS_5_INDEX           5
+#define THRUST_LEVERS_6_INDEX           6
+#define THRUST_LEVERS_7_INDEX           7
+
+#define THRUST_LEVERS_0_GLYPH           byte(THRUST_LEVERS_0_INDEX)
+#define THRUST_LEVERS_1_GLYPH           byte(THRUST_LEVERS_1_INDEX)
+#define THRUST_LEVERS_2_GLYPH           byte(THRUST_LEVERS_2_INDEX)
+#define THRUST_LEVERS_3_GLYPH           byte(THRUST_LEVERS_3_INDEX)
+#define THRUST_LEVERS_4_GLYPH           byte(THRUST_LEVERS_4_INDEX)
+#define THRUST_LEVERS_5_GLYPH           byte(THRUST_LEVERS_5_INDEX)
+#define THRUST_LEVERS_6_GLYPH           byte(THRUST_LEVERS_6_INDEX)
+#define THRUST_LEVERS_7_GLYPH           byte(THRUST_LEVERS_7_INDEX)
+
+
 #define FLAPS_POSITION_SIZE                        3
 char flaps_position[FLAPS_POSITION_SIZE]         = {'0', '0', '0'};
 #define SPOILERS_POSITION_SIZE                     3
 char spoilers_position[SPOILERS_POSITION_SIZE]   = {'0', '0', '0'};
 #define SPOILERS_ARMED_SIZE                        1
 char spoilers_armed[SPOILERS_ARMED_SIZE]         = {'0'};
+
+#define N1_RPM_SIZE                                               5
+char n1_rpm_engine_1[N1_RPM_SIZE]                                 = {'0', '0', '0', '0', '0'};
+char n1_rpm_engine_2[N1_RPM_SIZE]                                 = {'0', '0', '0', '0', '0'};
+#define EGT_SIZE                                                  3
+char egt_engine_1[EGT_SIZE]                                       = {'0', '0', '0'};
+char egt_engine_2[EGT_SIZE]                                       = {'0', '0', '0'};
+#define FUEL_FLOW_SIZE                                            4
+char fuel_flow_engine_1[FUEL_FLOW_SIZE]                           = {'0', '0', '0', '0'};
+char fuel_flow_engine_2[FUEL_FLOW_SIZE]                           = {'0', '0', '0', '0'};
+#define THRUST_LEVERS_POSITION_SIZE                               4
+char thrust_levers_position_engine_1[THRUST_LEVERS_POSITION_SIZE] = {'+', '0', '0', '0'};
+char thrust_levers_position_engine_2[THRUST_LEVERS_POSITION_SIZE] = {'+', '0', '0', '0'};
 
 #define KEYPAD_ROW_COUNT  4
 #define KEYPAD_COL_COUNT  4
@@ -120,6 +159,8 @@ int flaps_updated = 0;
 int spoilers_updated = 0;
 int fuel_updated = 0;
 
+int ecam1_updated = 0;
+
 
 // Public
 
@@ -128,10 +169,21 @@ void ecam_setup() {
   previousPageButton.setOnClick(previous_ecam);
   scrollUpButton.setOnClick(scroll_up);
   scrollDownButton.setOnClick(scroll_down);
-  ecam2_lcd.begin(ECAM_LCD_COL_COUNT, ECAM_LCD_ROW_COUNT);
+
   ecam1_lcd.begin(ECAM_LCD_COL_COUNT, ECAM_LCD_ROW_COUNT);
+  ecam2_lcd.begin(ECAM_LCD_COL_COUNT, ECAM_LCD_ROW_COUNT);
+
+  ecam1_lcd.createChar(THRUST_LEVERS_0_INDEX, THRUST_LEVERS_POSITION_0);
+  ecam1_lcd.createChar(THRUST_LEVERS_1_INDEX, THRUST_LEVERS_POSITION_1);
+  ecam1_lcd.createChar(THRUST_LEVERS_2_INDEX, THRUST_LEVERS_POSITION_2);
+  ecam1_lcd.createChar(THRUST_LEVERS_3_INDEX, THRUST_LEVERS_POSITION_3);
+  ecam1_lcd.createChar(THRUST_LEVERS_4_INDEX, THRUST_LEVERS_POSITION_4);
+  ecam1_lcd.createChar(THRUST_LEVERS_5_INDEX, THRUST_LEVERS_POSITION_5);
+  ecam1_lcd.createChar(THRUST_LEVERS_6_INDEX, THRUST_LEVERS_POSITION_6);
+  ecam1_lcd.createChar(THRUST_LEVERS_7_INDEX, THRUST_LEVERS_POSITION_7);
+
+  render_ecam_1();
   ecam2_force_rerender();
-  ecam1_lcd.write("ECAM 1");
 }
 
 
@@ -141,9 +193,55 @@ void ecam_tick() {
   previousPageButton.tick();
   scrollUpButton.tick();
   scrollDownButton.tick();
+
   if (current_ecam_page->update_if_necessary != NULL) {
     current_ecam_page->update_if_necessary();
   }
+
+  if (ecam1_updated) {
+    ecam1_updated = 0;
+    render_ecam_1();
+  }
+}
+
+
+void read_n1_engine1(char token) {
+  store_token(token, n1_rpm_engine_1, N1_RPM_SIZE, &ecam1_updated);
+}
+
+
+void read_n1_engine2(char token) {
+  store_token(token, n1_rpm_engine_2, N1_RPM_SIZE, &ecam1_updated);
+}
+
+
+void read_egt_engine1(char token) {
+  store_token(token, egt_engine_1, EGT_SIZE, &ecam1_updated);
+}
+
+
+void read_egt_engine2(char token) {
+  store_token(token, egt_engine_2, EGT_SIZE, &ecam1_updated);
+}
+
+
+void read_fuel_flow_engine1(char token) {
+  store_token(token, fuel_flow_engine_1, FUEL_FLOW_SIZE, &ecam1_updated);
+}
+
+
+void read_fuel_flow_engine2(char token) {
+  store_token(token, fuel_flow_engine_2, FUEL_FLOW_SIZE, &ecam1_updated);
+}
+
+
+void read_thrust_levers_position_engine1(char token) {
+  store_token(token, thrust_levers_position_engine_1, THRUST_LEVERS_POSITION_SIZE, &ecam1_updated);
+}
+
+
+void read_thrust_levers_position_engine2(char token) {
+  store_token(token, thrust_levers_position_engine_2, THRUST_LEVERS_POSITION_SIZE, &ecam1_updated);
 }
 
 
@@ -201,6 +299,208 @@ void scroll_up() {
 
 void scroll_down() {
   Serial.println("scroll_down()");
+}
+
+
+// ECAM 1
+
+void render_ecam_1() {
+  int n1 = int_from_string(n1_rpm_engine_1, N1_RPM_SIZE, 0);
+  int egt = int_from_string(egt_engine_1, EGT_SIZE, 0);
+  int ff = int_from_string(fuel_flow_engine_1, FUEL_FLOW_SIZE, 0);
+  int thrust_lever_position = int_from_string(thrust_levers_position_engine_1, THRUST_LEVERS_POSITION_SIZE, 1);
+  render_engine_1(n1, egt, ff, thrust_lever_position);
+
+  render_labels();
+
+  n1 = int_from_string(n1_rpm_engine_2, N1_RPM_SIZE, 0);
+  egt = int_from_string(egt_engine_2, EGT_SIZE, 0);
+  ff = int_from_string(fuel_flow_engine_2, FUEL_FLOW_SIZE, 0);
+  thrust_lever_position = int_from_string(thrust_levers_position_engine_2, THRUST_LEVERS_POSITION_SIZE, 1);
+  render_engine_2(n1, egt, ff, thrust_lever_position);
+
+}
+
+
+void render_labels() {
+  ecam1_lcd.setCursor(9, 0);
+  ecam1_lcd.print("N1");
+  ecam1_lcd.setCursor(9, 1);
+  ecam1_lcd.print("EGT");
+  ecam1_lcd.setCursor(9, 2);
+  ecam1_lcd.print("FF");
+  ecam1_lcd.setCursor(9, 3);
+  ecam1_lcd.print("THR");
+}
+
+
+void render_engine_1(int n1, int egt, int ff, int thr) {
+  ecam1_lcd.setCursor(2, 0);
+  if (n1 < 10000) {
+    ecam1_lcd.print(" ");
+  }
+  if (n1 < 1000) {
+    ecam1_lcd.print(" ");
+  }
+  if (n1 < 100) {
+    ecam1_lcd.print(" ");
+  }
+  if (n1 < 10) {
+    ecam1_lcd.print(" ");
+  }
+  ecam1_lcd.print(n1);
+
+  ecam1_lcd.setCursor(2, 1);
+  ecam1_lcd.print("  ");
+  if (egt < 100) {
+    ecam1_lcd.print(" ");
+  }
+  if (egt < 10) {
+    ecam1_lcd.print(" ");
+  }
+  ecam1_lcd.print(egt);
+
+  ecam1_lcd.setCursor(2, 2);
+  ecam1_lcd.print(" ");
+  if (ff < 1000) {
+    ecam1_lcd.print(" ");
+  }
+  if (ff < 100) {
+    ecam1_lcd.print(" ");
+  }
+  if (ff < 10) {
+    ecam1_lcd.print(" ");
+  }
+  ecam1_lcd.print(ff);
+
+  ecam1_lcd.setCursor(2, 3);
+  int thr_abs = thr;
+  if (thr < 0) {
+    ecam1_lcd.print(" ");
+    thr_abs = -thr;
+  } else {
+    ecam1_lcd.print("  ");
+  }
+  if (thr_abs < 100) {
+    ecam1_lcd.print(" ");
+  }
+  if (thr_abs < 10) {
+    ecam1_lcd.print(" ");
+  }
+  ecam1_lcd.print(thr);
+
+  render_thrust_lever(0, thr);
+}
+
+
+void render_engine_2(int n1, int egt, int ff, int thr) {
+  ecam1_lcd.setCursor(13, 0);
+  ecam1_lcd.print(n1);
+  if (n1 < 10000) {
+    ecam1_lcd.print(" ");
+  }
+  if (n1 < 1000) {
+    ecam1_lcd.print(" ");
+  }
+  if (n1 < 100) {
+    ecam1_lcd.print(" ");
+  }
+  if (n1 < 10) {
+    ecam1_lcd.print(" ");
+  }
+
+  ecam1_lcd.setCursor(13, 1);
+  ecam1_lcd.print(egt);
+  if (egt < 100) {
+    ecam1_lcd.print(" ");
+  }
+  if (egt < 10) {
+    ecam1_lcd.print(" ");
+  }
+
+  ecam1_lcd.setCursor(13, 2);
+  ecam1_lcd.print(ff);
+  if (ff < 1000) {
+    ecam1_lcd.print(" ");
+  }
+  if (ff < 100) {
+    ecam1_lcd.print(" ");
+  }
+  if (ff < 10) {
+    ecam1_lcd.print(" ");
+  }
+
+  ecam1_lcd.setCursor(13, 3);
+  ecam1_lcd.print(thr);
+  if (thr < 0) {
+    ecam1_lcd.print(" ");
+  } else {
+    if (thr < 100) {
+      ecam1_lcd.print(" ");
+    }
+    if (thr < 10) {
+      ecam1_lcd.print(" ");
+    }
+  }
+
+  render_thrust_lever(19, thr);
+}
+
+
+void render_thrust_lever(int col, int thr) {
+  thr = thr < 0 ? -thr : thr;
+  int units = thr / 3.125;
+
+  Serial.print("units -> ");
+  Serial.println(units);
+
+  int filled = units / 8;
+
+  int i;
+  for (i = 0; i < filled; i++) {
+    ecam1_lcd.setCursor(col, 3-i);
+    ecam1_lcd.write(THRUST_LEVERS_7_GLYPH);
+  }
+  ecam1_lcd.setCursor(col, 3-i);
+  switch (units % 8) {
+    case 0:
+    ecam1_lcd.write(THRUST_LEVERS_0_GLYPH);
+    break;
+
+    case 1:
+    ecam1_lcd.write(THRUST_LEVERS_1_GLYPH);
+    break;
+
+    case 2:
+    ecam1_lcd.write(THRUST_LEVERS_2_GLYPH);
+    break;
+
+    case 3:
+    ecam1_lcd.write(THRUST_LEVERS_3_GLYPH);
+    break;
+
+    case 4:
+    ecam1_lcd.write(THRUST_LEVERS_4_GLYPH);
+    break;
+
+    case 5:
+    ecam1_lcd.write(THRUST_LEVERS_5_GLYPH);
+    break;
+
+    case 6:
+    ecam1_lcd.write(THRUST_LEVERS_6_GLYPH);
+    break;
+
+    case 7:
+    ecam1_lcd.write(THRUST_LEVERS_7_GLYPH);
+    break;
+  }
+  i++;
+  while (i < 4) {
+    ecam1_lcd.setCursor(col, 3-i);
+    ecam1_lcd.write(THRUST_LEVERS_0_GLYPH);
+    i++;
+  }
 }
 
 
