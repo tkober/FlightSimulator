@@ -450,12 +450,7 @@ void render_engine_2(int n1, int egt, int ff, int thr) {
 void render_thrust_lever(int col, int thr) {
   thr = thr < 0 ? -thr : thr;
   int units = thr / 3.125;
-
-  Serial.print("units -> ");
-  Serial.println(units);
-
   int filled = units / 8;
-
   int i;
   for (i = 0; i < filled; i++) {
     ecam1_lcd.setCursor(col, 3-i);

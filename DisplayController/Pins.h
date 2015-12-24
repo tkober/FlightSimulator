@@ -101,6 +101,22 @@
 // Parking Brake LED
 #define PARKING_BRAKE_LED_PIN         23
 
+// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Systems Panel
+// -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+// Switch Matrix
+#define SWITCH_MATRIX_COL_1_PIN       2
+#define SWITCH_MATRIX_COL_2_PIN       14
+#define SWITCH_MATRIX_COL_3_PIN       15
+#define SWITCH_MATRIX_COL_4_PIN       16
+#define SWITCH_MATRIX_COL_5_PIN       17
+#define SWITCH_MATRIX_ROW_4_PIN       18
+#define SWITCH_MATRIX_ROW_3_PIN       19
+#define SWITCH_MATRIX_ROW_2_PIN       20
+#define SWITCH_MATRIX_ROW_1_PIN       21
+#define SWITCH_MATRIX_COL_PINS        (byte[]){SWITCH_MATRIX_COL_1_PIN, SWITCH_MATRIX_COL_2_PIN, SWITCH_MATRIX_COL_3_PIN, SWITCH_MATRIX_COL_4_PIN, SWITCH_MATRIX_COL_5_PIN}
+#define SWITCH_MATRIX_ROW_PINS        (byte[]){SWITCH_MATRIX_ROW_1_PIN, SWITCH_MATRIX_ROW_2_PIN, SWITCH_MATRIX_ROW_3_PIN, SWITCH_MATRIX_ROW_4_PIN}
+
 // ===============================================================================================================================================================================
 
 
@@ -114,7 +130,7 @@
 // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // LCD 1 (SPD / HDG / CRS)
 #define AP_LCD_1_RS_PIN               52
-#define AP_LCD_1_E_PIN                50  
+#define AP_LCD_1_E_PIN                50
 #define AP_LCD_1_D4_PIN               48
 #define AP_LCD_1_D5_PIN               46
 #define AP_LCD_1_D6_PIN               44
@@ -123,10 +139,10 @@
 
 // LCD 2 (ALT / VS)
 #define AP_LCD_2_RS_PIN               53
-#define AP_LCD_2_E_PIN                51  
+#define AP_LCD_2_E_PIN                51
 #define AP_LCD_2_D4_PIN               49
 #define AP_LCD_2_D5_PIN               47
-#define AP_LCD_2_D6_PIN               45  
+#define AP_LCD_2_D6_PIN               45
 #define AP_LCD_2_D7_PIN               43
 #define AP_LCD_2_PINS                 AP_LCD_2_RS_PIN, AP_LCD_2_E_PIN, AP_LCD_2_D4_PIN, AP_LCD_2_D5_PIN, AP_LCD_2_D6_PIN, AP_LCD_2_D7_PIN
 
@@ -173,7 +189,7 @@
 
 // Toglle FD
 #define TOGGLE_FD_PIN                 32
-  
+
 // Toglle NAV GPS
 #define TOGGLE_NAV_GPS_PIN            30
 
@@ -185,7 +201,7 @@
 // -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 // Rudder LCD
 #define RUDDER_TRIM_LCD_RS_PIN        24
-#define RUDDER_TRIM_LCD_E_PIN         22  
+#define RUDDER_TRIM_LCD_E_PIN         22
 #define RUDDER_TRIM_LCD_D4_PIN        29
 #define RUDDER_TRIM_LCD_D5_PIN        27
 #define RUDDER_TRIM_LCD_D6_PIN        25
@@ -195,7 +211,7 @@
 
 // Elevator LCD
 #define ELEVATOR_TRIM_LCD_RS_PIN      41
-#define ELEVATOR_TRIM_LCD_E_PIN       39  
+#define ELEVATOR_TRIM_LCD_E_PIN       39
 #define ELEVATOR_TRIM_LCD_D4_PIN      37
 #define ELEVATOR_TRIM_LCD_D5_PIN      35
 #define ELEVATOR_TRIM_LCD_D6_PIN      33
@@ -203,7 +219,7 @@
 
 #define ELEVATOR_TRIM_LCD_PINS        ELEVATOR_TRIM_LCD_RS_PIN, ELEVATOR_TRIM_LCD_E_PIN, ELEVATOR_TRIM_LCD_D4_PIN, ELEVATOR_TRIM_LCD_D5_PIN, ELEVATOR_TRIM_LCD_D6_PIN, ELEVATOR_TRIM_LCD_D7_PIN
 
-// Change Rudder 
+// Change Rudder
 #define CHANGE_RUDDER_BUTTON_PIN      14
 #define CHANGE_RUDDER_ENCODER_PIN_A   15
 #define CHANGE_RUDDER_ENCODER_PIN_B   16
@@ -223,7 +239,7 @@
 // Retract Spoilers
 #define RETRACT_SPOILERS_PIN          4
 
-// Extend Spoilers  
+// Extend Spoilers
 #define EXTEND_SPOILERS_PIN           3
 
 // Retract Flaps

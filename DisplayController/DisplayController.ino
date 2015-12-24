@@ -22,6 +22,7 @@ void setup() {
   ecam_setup();
   radio_setup();
   gear_setup();
+  systems_setup();
 #endif
 
 #ifdef CONTROLLER_B
@@ -49,6 +50,7 @@ void loop() {
   ecam_tick();
   radio_tick();
   gear_tick();
+  systems_tick();
 #endif
 
 #ifdef CONTROLLER_B
