@@ -8,9 +8,11 @@ extern byte NAV_HOLD[8];
 extern byte APR_HOLD[8];
 extern byte GLIDESLOPE[8];
 
-extern byte FLAPS_TOP[8];
-extern byte FLAPS_MIDDLE[8];
-extern byte FLAPS_BOTTOM[8];
+extern byte FLAPS_1[8];
+extern byte FLAPS_2[8];
+extern byte FLAPS_3[8];
+extern byte FLAPS_4[8];
+extern byte FLAPS_5[8];
 
 extern byte SPOILER_BOTTOM_RETRACTED[8];
 extern byte SPOILER_BOTTOM_1[8];

@@ -90,7 +90,19 @@ byte GLIDESLOPE[8] = {
 
 // Flaps
 
-byte FLAPS_TOP[8] = {
+byte FLAPS_1[8] = {
+  B11111,
+  B11111,
+  B11111,
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00000
+};
+
+
+byte FLAPS_2[8] = {
   B00000,
   B11111,
   B11111,
@@ -102,7 +114,7 @@ byte FLAPS_TOP[8] = {
 };
 
 
-byte FLAPS_MIDDLE[8] = {
+byte FLAPS_3[8] = {
   B00000,
   B00000,
   B11111,
@@ -114,15 +126,27 @@ byte FLAPS_MIDDLE[8] = {
 };
 
 
-byte FLAPS_BOTTOM[8] = {
-  B00000,
+byte FLAPS_4[8] = {
   B00000,
   B00000,
   B00000,
   B11111,
   B11111,
   B11111,
-  B00000
+  B00000,
+  B00000,
+};
+
+
+byte FLAPS_5[8] = {
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B00000,
+  B11111,
+  B11111,
+  B11111
 };
 
 

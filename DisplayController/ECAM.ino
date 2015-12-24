@@ -80,23 +80,25 @@ ECAMPage in_flight_settings_page = ECAM_PAGE_MAKE(
 #define ECAM_LCD_ROW_COUNT   4
 #define ECAM_LCD_COL_COUNT   20
 
-#define FLAPS_TOP_INDEX                 0
-#define FLAPS_MIDDLE_INDEX              1
-#define FLAPS_BOTTOM_INDEX              2
-#define SPOILER_BOTTOM_RETRACTED_INDEX  3
-#define SPOILER_BOTTOM_1_INDEX          4
-#define SPOILER_BOTTOM_2_INDEX          5
-#define SPOILER_BOTTOM_FULL_INDEX       6
-#define SPOILER_TOP_FULL_INDEX          7
+#define FLAPS_1_INDEX                   0
+#define FLAPS_2_INDEX                   1
+#define FLAPS_3_INDEX                   2
+#define FLAPS_4_INDEX                   3
+#define FLAPS_5_INDEX                   4
 
-#define FLAPS_TOP_GLYPH                 byte(FLAPS_TOP_INDEX)
-#define FLAPS_MIDDLE_GLYPH              byte(FLAPS_MIDDLE_INDEX)
-#define FLAPS_BOTTOM_GLYPH              byte(FLAPS_BOTTOM_INDEX)
+#define SPOILER_BOTTOM_RETRACTED_INDEX  5
+#define SPOILER_BOTTOM_1_INDEX          6
+#define SPOILER_BOTTOM_2_INDEX          7
+
+#define FLAPS_1_GLYPH                   byte(FLAPS_1_INDEX)
+#define FLAPS_2_GLYPH                   byte(FLAPS_2_INDEX)
+#define FLAPS_3_GLYPH                   byte(FLAPS_3_INDEX)
+#define FLAPS_4_GLYPH                   byte(FLAPS_4_INDEX)
+#define FLAPS_5_GLYPH                   byte(FLAPS_5_INDEX)
+
 #define SPOILER_BOTTOM_RETRACTED_GLYPH  byte(SPOILER_BOTTOM_RETRACTED_INDEX)
 #define SPOILER_BOTTOM_1_GLYPH          byte(SPOILER_BOTTOM_1_INDEX)
 #define SPOILER_BOTTOM_2_GLYPH          byte(SPOILER_BOTTOM_2_INDEX)
-#define SPOILER_BOTTOM_FULL_GLYPH       byte(SPOILER_BOTTOM_FULL_INDEX)
-#define SPOILER_TOP_FULL_GLYPH          byte(SPOILER_TOP_FULL_INDEX)
 
 
 #define THRUST_LEVERS_0_INDEX           0
@@ -501,14 +503,15 @@ void render_thrust_lever(int col, int thr) {
 
 // Control Surface
 void control_surfaces_page_will_appear() {
-  ecam2_lcd.createChar(FLAPS_TOP_INDEX, FLAPS_TOP);
-  ecam2_lcd.createChar(FLAPS_MIDDLE_INDEX, FLAPS_MIDDLE);
-  ecam2_lcd.createChar(FLAPS_BOTTOM_INDEX, FLAPS_BOTTOM);
+  ecam2_lcd.createChar(FLAPS_1_INDEX, FLAPS_1);
+  ecam2_lcd.createChar(FLAPS_2_INDEX, FLAPS_2);
+  ecam2_lcd.createChar(FLAPS_3_INDEX, FLAPS_3);
+  ecam2_lcd.createChar(FLAPS_4_INDEX, FLAPS_4);
+  ecam2_lcd.createChar(FLAPS_5_INDEX, FLAPS_5);
+
   ecam2_lcd.createChar(SPOILER_BOTTOM_RETRACTED_INDEX, SPOILER_BOTTOM_RETRACTED);
   ecam2_lcd.createChar(SPOILER_BOTTOM_1_INDEX, SPOILER_BOTTOM_1);
   ecam2_lcd.createChar(SPOILER_BOTTOM_2_INDEX, SPOILER_BOTTOM_2);
-  ecam2_lcd.createChar(SPOILER_BOTTOM_FULL_INDEX, SPOILER_BOTTOM_FULL);
-  ecam2_lcd.createChar(SPOILER_TOP_FULL_INDEX, SPOILER_TOP_FULL);
   ecam2_lcd.clear();
 }
 
@@ -535,10 +538,8 @@ void render_spoilers() {
     render_spoilers_retracted(spoilers, armed);
   } else if (spoilers <= 50) {
     render_spoilers_1(spoilers, armed);
-  } else if (spoilers <= 75) {
-    render_spoilers_2(spoilers, armed);
   } else {
-    render_spoilers_full(spoilers, armed);
+    render_spoilers_2(spoilers, armed);
   }
 }
 
@@ -625,70 +626,70 @@ void in_flight_settings_page_handle_keypad_input(char key) {
 void render_flaps_up() {
   ecam2_lcd.print("Up  ");
   ecam2_lcd.setCursor(12, 3);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
 }
 
 
 void render_flaps_1() {
   ecam2_lcd.print("1   ");
   ecam2_lcd.setCursor(12, 3);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_MIDDLE_GLYPH);
+  ecam2_lcd.write(FLAPS_2_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_2_GLYPH);
 }
 
 
 void render_flaps_2() {
   ecam2_lcd.print("2   ");
   ecam2_lcd.setCursor(12, 3);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_MIDDLE_GLYPH);
-  ecam2_lcd.write(FLAPS_MIDDLE_GLYPH);
+  ecam2_lcd.write(FLAPS_3_GLYPH);
+  ecam2_lcd.write(FLAPS_2_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_2_GLYPH);
+  ecam2_lcd.write(FLAPS_3_GLYPH);
 }
 
 
 void render_flaps_3() {
   ecam2_lcd.print("3   ");
   ecam2_lcd.setCursor(12, 3);
-  ecam2_lcd.write(FLAPS_MIDDLE_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_MIDDLE_GLYPH);
-  ecam2_lcd.write(FLAPS_BOTTOM_GLYPH);
+  ecam2_lcd.write(FLAPS_4_GLYPH);
+  ecam2_lcd.write(FLAPS_3_GLYPH);
+  ecam2_lcd.write(FLAPS_2_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_2_GLYPH);
+  ecam2_lcd.write(FLAPS_3_GLYPH);
+  ecam2_lcd.write(FLAPS_4_GLYPH);
 }
 
 
 void render_flaps_full() {
   ecam2_lcd.print("Full");
   ecam2_lcd.setCursor(12, 3);
-  ecam2_lcd.write(FLAPS_BOTTOM_GLYPH);
-  ecam2_lcd.write(FLAPS_MIDDLE_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_TOP_GLYPH);
-  ecam2_lcd.write(FLAPS_MIDDLE_GLYPH);
-  ecam2_lcd.write(FLAPS_BOTTOM_GLYPH);
-  ecam2_lcd.write(FLAPS_BOTTOM_GLYPH);
+  ecam2_lcd.write(FLAPS_4_GLYPH);
+  ecam2_lcd.write(FLAPS_3_GLYPH);
+  ecam2_lcd.write(FLAPS_2_GLYPH);
+  ecam2_lcd.write(FLAPS_1_GLYPH);
+  ecam2_lcd.write(FLAPS_2_GLYPH);
+  ecam2_lcd.write(FLAPS_3_GLYPH);
+  ecam2_lcd.write(FLAPS_4_GLYPH);
+  ecam2_lcd.write(FLAPS_5_GLYPH);
 }
 
 
@@ -778,35 +779,6 @@ void render_spoilers_2(int percent, int armed) {
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
   ecam2_lcd.write(SPOILER_BOTTOM_2_GLYPH);
-}
-
-
-void render_spoilers_full(int percent, int armed) {
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  ecam2_lcd.print(" SPOILERS ");
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_TOP_FULL_GLYPH);
-
-  ecam2_lcd.setCursor(0, 1);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  render_spoilers_armed(armed);
-  render_spoilers_percent(percent);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
-  ecam2_lcd.write(SPOILER_BOTTOM_FULL_GLYPH);
 }
 
 
