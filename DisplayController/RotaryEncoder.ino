@@ -2,7 +2,7 @@
 
 
 #define LATCHSTATE                          3
-#define DEFAULT_DEBOUNCE_FILTER             50
+#define DEFAULT_DEBOUNCE_FILTER             200
 #define DEFAULT_BOOST_ACTIVATION_COUNT      15
 #define DEFAULT_BOOST_ACTIVATION_INTERVAL   500
 
@@ -11,7 +11,7 @@ const int8_t KNOBDIR[] = {
   0, -1,  1,  0,
   1,  0,  0, -1,
   -1,  0,  0,  1,
-  0,  1, -1,  0  
+  0,  1, -1,  0
 };
 
 
@@ -23,9 +23,10 @@ PushableRotaryEncoder::PushableRotaryEncoder(int rotaryPinA, int rotaryPinB, int
   _button = Button(buttonPin, pullUp);
   pinMode(rotaryPinA, pullUp == 1 ? INPUT_PULLUP : INPUT);
   pinMode(rotaryPinB, pullUp == 1 ? INPUT_PULLUP : INPUT);
-  
+
   _oldState = 3;
   _lastTime = millis();
+  _directionState = Stopped;
   _debounceFilter = DEFAULT_DEBOUNCE_FILTER;
   _boostCount = 0;
   _boostActivationCount = DEFAULT_BOOST_ACTIVATION_COUNT;
@@ -67,7 +68,7 @@ void PushableRotaryEncoder::setBoostActivationInterval(int boostActivationInterv
   _boostActivationInterval = boostActivationInterval;
 }
 
-    
+
 void PushableRotaryEncoder::tick() {
   _button.tick();
 
@@ -77,28 +78,64 @@ void PushableRotaryEncoder::tick() {
 
   if (_oldState != thisState) {
     int direction = KNOBDIR[thisState | (_oldState<<2)];
-    
+
     if (thisState == LATCHSTATE) {
       unsigned long now = millis();
       if (now - _lastTime >= _debounceFilter) {
-        if (now - _lastTime <= _boostActivationInterval) {
-          _boostCount++;
-        } else {
-          _boostCount = 0;
+        _directionState = Stopped;
+      }
+      if (now - _lastTime <= _boostActivationInterval) {
+        _boostCount++;
+      } else {
+        _boostCount = 0;
+      }
+      _lastTime = now;
+      if (direction > 0) {
+        switch (_directionState) {
+
+          case Stopped:
+            _directionState = StartedClockwise;
+            break;
+
+          case StartedClockwise:
+            _directionState = RotatingClockwise;
+            break;
+
+          case RotatingClockwise:
+            break;
+
+          default:
+            goto on_bounce;
+            break;
         }
-        _lastTime = now;
-        if (direction > 0) {
-          if (_onRotateClockwise != NULL) {
-            _onRotateClockwise(_boostCount >= _boostActivationCount);
-          }
-        } else {
-          if (_onRotateCounterClockwise != NULL) {
-            _onRotateCounterClockwise(_boostCount >= _boostActivationCount);
-          }
+        if (_onRotateClockwise != NULL) {
+          _onRotateClockwise(_boostCount >= _boostActivationCount);
+        }
+      } else {
+        switch (_directionState) {
+
+          case Stopped:
+            _directionState = StartedCounterClockwise;
+            break;
+
+          case StartedCounterClockwise:
+            _directionState = RotatingCounterClockwise;
+            break;
+
+          case RotatingCounterClockwise:
+            break;
+
+          default:
+            goto on_bounce;
+            break;
+        }
+        if (_onRotateCounterClockwise != NULL) {
+          _onRotateCounterClockwise(_boostCount >= _boostActivationCount);
         }
       }
     }
-    
+
+on_bounce:
     _oldState = thisState;
   } else {
     if (millis() - _lastTime > 2000) {
@@ -106,4 +143,3 @@ void PushableRotaryEncoder::tick() {
     }
   }
 }
-
