@@ -17,3 +17,8 @@ extern void read_thrust_levers_position_engine2(char token);
 extern void read_flaps_position(char token);
 extern void read_spoilers_position(char token);
 extern void read_spoilers_armed(char token);
+
+extern void read_fuel_left(char token);
+extern void read_fuel_center(char token);
+extern void read_fuel_right(char token);
+extern void read_x_feed_valve(char token);

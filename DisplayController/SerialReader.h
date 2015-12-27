@@ -79,6 +79,11 @@ extern void store_token(char token, char destination[], int size, int *updated);
 #define READ_FUEL_FLOW_ENGINE_1       DEFAULT_TOKEN_PROCESSING
 #define READ_FUEL_FLOW_ENGINE_2       DEFAULT_TOKEN_PROCESSING
 
+#define READ_LEFT_FUEL                DEFAULT_TOKEN_PROCESSING
+#define READ_CENTRAL_FUEL             DEFAULT_TOKEN_PROCESSING
+#define READ_RIGHT_FUEL               DEFAULT_TOKEN_PROCESSING
+#define READ_X_FEED_VALVE             DEFAULT_TOKEN_PROCESSING
+
 
 
 #ifdef CONTROLLER_A
@@ -96,6 +101,11 @@ extern void store_token(char token, char destination[], int size, int *updated);
 #define READ_FLAPS_POSITION           read_flaps_position
 #define READ_SPOILERS_POSITION        read_spoilers_position
 #define READ_SPOILERS_ARMED           read_spoilers_armed
+
+#define READ_LEFT_FUEL                read_fuel_left
+#define READ_CENTRAL_FUEL             read_fuel_center
+#define READ_RIGHT_FUEL               read_fuel_right
+#define READ_X_FEED_VALVE             read_x_feed_valve
 
 // Radio
 #define READ_COM1_FREQ                read_com1_freq

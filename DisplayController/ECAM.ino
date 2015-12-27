@@ -9,6 +9,12 @@
 #include "Math.h"
 
 
+enum FuelUnit {
+  Percent,
+  Tons
+};
+
+
 void keypad_tick();
 
 void previous_ecam();
@@ -31,6 +37,18 @@ extern ECAMPage fuel_page;
 void fuel_page_will_appear();
 void fuel_page_render();
 void fuel_page_update_if_necessary();
+void fuel_page_scroll_down();
+void fuel_page_scroll_up();
+void fuel_page_handle_keypad_input(char key);
+void render_fuel_info();
+void render_fuel_configuration();
+void render_fuel_value(unsigned long value, unsigned long kg_per_percent);
+void render_x_feed_valve();
+void toggle_fuel_unit();
+void render_fuel_configuration_value(char *value);
+void render_scrollbar(int up, int down);
+void configure_fuel_with_input(int index);
+void clear_fuel_configuration_ipnut();
 
 extern ECAMPage in_flight_settings_page;
 void in_flight_settings_page_will_appear();
@@ -60,9 +78,9 @@ ECAMPage fuel_page = ECAM_PAGE_MAKE(
   fuel_page_render,
   fuel_page_update_if_necessary,
   NULL,
-  NULL,
-  NULL,
-  NULL
+  fuel_page_scroll_down,
+  fuel_page_scroll_up,
+  fuel_page_handle_keypad_input
 );
 
 ECAMPage in_flight_settings_page = ECAM_PAGE_MAKE(
@@ -120,6 +138,33 @@ ECAMPage in_flight_settings_page = ECAM_PAGE_MAKE(
 #define THRUST_LEVERS_7_GLYPH           byte(THRUST_LEVERS_7_INDEX)
 
 
+#define FRAME_UPPER_RIGHT_INDEX         0
+#define FRAME_UPPER_LEFT_INDEX          1
+#define FRAME_BOTTOM_RIGHT_INDEX        2
+#define FRAME_BOTTOM_LEFT_INDEX         3
+#define FRAME_VERTICAL_INDEX            4
+#define FRAME_HORIZONTAL_INDEX          5
+#define X_FEED_VALVE_OPEN_INDEX         6
+#define X_FEED_VALVE_CLOSED_INDEX       7
+
+#define FRAME_UPPER_RIGHT_GLYPH         byte(FRAME_UPPER_RIGHT_INDEX)
+#define FRAME_UPPER_LEFT_GLYPH          byte(FRAME_UPPER_LEFT_INDEX)
+#define FRAME_BOTTOM_RIGHT_GLYPH        byte(FRAME_BOTTOM_RIGHT_INDEX)
+#define FRAME_BOTTOM_LEFT_GLYPH         byte(FRAME_BOTTOM_LEFT_INDEX)
+#define FRAME_VERTICAL_GLYPH            byte(FRAME_VERTICAL_INDEX)
+#define FRAME_HORIZONTAL_GLYPH          byte(FRAME_HORIZONTAL_INDEX)
+#define X_FEED_VALVE_OPEN_GLYPH         byte(X_FEED_VALVE_OPEN_INDEX)
+#define X_FEED_VALVE_CLOSED_GLYPH       byte(X_FEED_VALVE_CLOSED_INDEX)
+
+#define SCROLL_DOWN_INDEX               0
+#define SCROLL_UP_INDEX                 1
+#define PLACEHOLDER_INDEX               2
+
+#define SCROLL_DOWN_GLYPH               byte(SCROLL_DOWN_INDEX)
+#define SCROLL_UP_GLYPH                 byte(SCROLL_UP_INDEX)
+#define PLACEHOLDER_GLYPH               byte(PLACEHOLDER_INDEX)
+
+
 #define FLAPS_POSITION_SIZE                        3
 char flaps_position[FLAPS_POSITION_SIZE]         = {'0', '0', '0'};
 #define SPOILERS_POSITION_SIZE                     3
@@ -139,6 +184,22 @@ char fuel_flow_engine_2[FUEL_FLOW_SIZE]                           = {'0', '0', '
 #define THRUST_LEVERS_POSITION_SIZE                               4
 char thrust_levers_position_engine_1[THRUST_LEVERS_POSITION_SIZE] = {'+', '0', '0', '0'};
 char thrust_levers_position_engine_2[THRUST_LEVERS_POSITION_SIZE] = {'+', '0', '0', '0'};
+
+#define FUEL_SIZE 3
+char fuel_left[FUEL_SIZE]   = {'0', '0', '0'};
+char fuel_center[FUEL_SIZE] = {'0', '0', '0'};
+char fuel_right[FUEL_SIZE]  = {'0', '0', '0'};
+FuelUnit fuel_unit = Percent;
+#define FUEL_CONFIGURATION_SIZE     4
+char fuel_kg_per_percent_left[FUEL_CONFIGURATION_SIZE] = {PLACEHOLDER_INDEX, PLACEHOLDER_INDEX, PLACEHOLDER_INDEX, PLACEHOLDER_INDEX};
+char fuel_kg_per_percent_center[FUEL_CONFIGURATION_SIZE] = {PLACEHOLDER_INDEX, PLACEHOLDER_INDEX, PLACEHOLDER_INDEX, PLACEHOLDER_INDEX};
+char fuel_kg_per_percent_right[FUEL_CONFIGURATION_SIZE] = {PLACEHOLDER_INDEX, PLACEHOLDER_INDEX, PLACEHOLDER_INDEX, PLACEHOLDER_INDEX};
+char fuel_configuration_input[FUEL_CONFIGURATION_SIZE] = {'_', '_', '_', '_'};
+int fuel_configuration_input_position = 0;
+int is_configuring_fuel = 0;
+int fuel_configuration_clip_position = 0;
+#define X_FEED_VALVE_SIZE             1
+char x_feed_valve[X_FEED_VALVE_SIZE]  = {'0'};
 
 #define KEYPAD_ROW_COUNT  4
 #define KEYPAD_COL_COUNT  4
@@ -262,6 +323,26 @@ void read_spoilers_armed(char token) {
 }
 
 
+void read_fuel_left(char token) {
+  store_token(token, fuel_left, FUEL_SIZE, &fuel_updated);
+}
+
+
+void read_fuel_center(char token) {
+  store_token(token, fuel_center, FUEL_SIZE, &fuel_updated);
+}
+
+
+void read_fuel_right(char token) {
+  store_token(token, fuel_right, FUEL_SIZE, &fuel_updated);
+}
+
+
+void read_x_feed_valve(char token) {
+  store_token(token, x_feed_valve, X_FEED_VALVE_SIZE, &fuel_updated);
+}
+
+
 // Private
 
 void keypad_tick() {
@@ -295,12 +376,16 @@ void ecam2_force_rerender() {
 
 
 void scroll_up() {
-  Serial.println("scroll_up()");
+  if (current_ecam_page->scroll_up) {
+    current_ecam_page->scroll_up();
+  }
 }
 
 
 void scroll_down() {
-  Serial.println("scroll_down()");
+  if (current_ecam_page->scroll_down) {
+    current_ecam_page->scroll_down();
+  }
 }
 
 
@@ -572,20 +657,362 @@ void render_flaps() {
 
 // Fuel
 void fuel_page_will_appear() {
+  if (is_configuring_fuel) {
+    ecam2_lcd.createChar(SCROLL_DOWN_INDEX, SCROLL_DOWN);
+    ecam2_lcd.createChar(SCROLL_UP_INDEX, SCROLL_UP);
+    ecam2_lcd.createChar(PLACEHOLDER_INDEX, PLACEHOLDER);
+  } else {
+    ecam2_lcd.createChar(FRAME_UPPER_RIGHT_INDEX, FRAME_UPPER_RIGHT);
+    ecam2_lcd.createChar(FRAME_UPPER_LEFT_INDEX, FRAME_UPPER_LEFT);
+    ecam2_lcd.createChar(FRAME_BOTTOM_RIGHT_INDEX, FRAME_BOTTOM_RIGHT);
+    ecam2_lcd.createChar(FRAME_BOTTOM_LEFT_INDEX, FRAME_BOTTOM_LEFT);
+    ecam2_lcd.createChar(FRAME_VERTICAL_INDEX, FRAME_VERTICAL);
+    ecam2_lcd.createChar(FRAME_HORIZONTAL_INDEX, FRAME_HORIZONTAL);
+
+    ecam2_lcd.createChar(X_FEED_VALVE_OPEN_INDEX, X_FEED_VALVE_OPEN);
+    ecam2_lcd.createChar(X_FEED_VALVE_CLOSED_INDEX, X_FEED_VALVE_CLOSED);
+  }
+
   ecam2_lcd.clear();
 }
 
 
 void fuel_page_render() {
-  ecam2_lcd.setCursor(0, 0);
-  ecam2_lcd.write("Fuel");
+  if (is_configuring_fuel) {
+    render_fuel_configuration();
+  } else {
+    render_fuel_info();
+  }
 }
 
 
 void fuel_page_update_if_necessary() {
   if (fuel_updated == 1) {
     fuel_page_render();
+    fuel_updated = 0;
   }
+}
+
+
+void fuel_page_scroll_down() {
+  if (is_configuring_fuel) {
+    if (fuel_configuration_clip_position == 0) {
+      fuel_configuration_clip_position = 1;
+      ecam2_lcd.clear();
+      fuel_updated = 1;
+    }
+  }
+}
+
+
+void fuel_page_scroll_up() {
+  if (is_configuring_fuel) {
+    if (fuel_configuration_clip_position == 1) {
+      fuel_configuration_clip_position = 0;
+      ecam2_lcd.clear();
+      fuel_updated = 1;
+    }
+  }
+}
+
+
+void fuel_page_handle_keypad_input(char key) {
+  if (is_configuring_fuel) {
+    switch (key) {
+      case '*':
+        is_configuring_fuel = 0;
+        fuel_page_will_appear();
+        fuel_updated = 1;
+        break;
+
+      case '#':
+        clear_fuel_configuration_ipnut();
+        break;
+
+      case 'A':
+        configure_fuel_with_input(0);
+        break;
+
+      case 'B':
+        configure_fuel_with_input(1);
+        break;
+
+      case 'C':
+        break;
+
+      case 'D':
+        break;
+
+      default:
+        if (fuel_configuration_input_position < FUEL_CONFIGURATION_SIZE) {
+          fuel_configuration_input[fuel_configuration_input_position] = key;
+          fuel_updated = 1;
+          fuel_configuration_input_position++;
+        }
+        break;
+    }
+  } else {
+    switch (key) {
+      case 'A':
+        toggle_fuel_unit();
+        break;
+
+      case 'B':
+        is_configuring_fuel = 1;
+        fuel_page_will_appear();
+        fuel_updated = 1;
+        break;
+
+      default:
+        break;
+    }
+  }
+}
+
+
+void render_fuel_info() {
+  int left = int_from_string(fuel_left, FUEL_SIZE, 0);
+  int center = int_from_string(fuel_center, FUEL_SIZE, 0);
+  int right = int_from_string(fuel_right, FUEL_SIZE, 0);
+
+  int leftKg = int_from_string(fuel_kg_per_percent_left, FUEL_CONFIGURATION_SIZE, 0);
+  int centerKg = int_from_string(fuel_kg_per_percent_center, FUEL_CONFIGURATION_SIZE, 0);
+  int rightKg = int_from_string(fuel_kg_per_percent_right, FUEL_CONFIGURATION_SIZE, 0);
+
+  ecam2_lcd.setCursor(0, 0);
+  switch (fuel_unit) {
+
+    case Percent:
+      ecam2_lcd.write("A> t   ");
+      break;
+
+    case Tons:
+      ecam2_lcd.write("A> %   ");
+      break;
+  }
+  ecam2_lcd.write(FRAME_UPPER_LEFT_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_UPPER_RIGHT_GLYPH);
+  ecam2_lcd.write(" CFG <B");
+
+  ecam2_lcd.setCursor(0, 1);
+  ecam2_lcd.write(FRAME_UPPER_LEFT_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_UPPER_RIGHT_GLYPH);
+  ecam2_lcd.write(" ");
+  ecam2_lcd.write(FRAME_VERTICAL_GLYPH);
+  render_fuel_value(center, centerKg);
+  ecam2_lcd.write(FRAME_VERTICAL_GLYPH);
+  ecam2_lcd.write(" ");
+  ecam2_lcd.write(FRAME_UPPER_LEFT_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_UPPER_RIGHT_GLYPH);
+
+  ecam2_lcd.setCursor(0, 2);
+  ecam2_lcd.write(FRAME_VERTICAL_GLYPH);
+  render_fuel_value(left, leftKg);
+  ecam2_lcd.write(FRAME_VERTICAL_GLYPH);
+  render_x_feed_valve();
+  ecam2_lcd.write(FRAME_VERTICAL_GLYPH);
+  ecam2_lcd.write("    ");
+  ecam2_lcd.write(FRAME_VERTICAL_GLYPH);
+  render_x_feed_valve();
+  ecam2_lcd.write(FRAME_VERTICAL_GLYPH);
+  render_fuel_value(right, rightKg);
+  ecam2_lcd.write(FRAME_VERTICAL_GLYPH);
+
+  ecam2_lcd.setCursor(0, 3);
+  ecam2_lcd.write(FRAME_BOTTOM_LEFT_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_BOTTOM_RIGHT_GLYPH);
+  ecam2_lcd.write(" ");
+  ecam2_lcd.write(FRAME_BOTTOM_LEFT_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_BOTTOM_RIGHT_GLYPH);
+  ecam2_lcd.write(" ");
+  ecam2_lcd.write(FRAME_BOTTOM_LEFT_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_HORIZONTAL_GLYPH);
+  ecam2_lcd.write(FRAME_BOTTOM_RIGHT_GLYPH);
+}
+
+
+void render_fuel_configuration() {
+  ecam2_lcd.setCursor(0, 0);
+  ecam2_lcd.write("*> EXIT");
+  ecam2_lcd.setCursor(0, 1);
+  ecam2_lcd.write("#> CLEAR");
+  ecam2_lcd.setCursor(0, 3);
+  ecam2_lcd.write(" >");
+  render_fuel_configuration_value(fuel_configuration_input);
+  ecam2_lcd.write("[kg/%]");
+  if (fuel_configuration_clip_position == 0) {
+    ecam2_lcd.setCursor(12, 0);
+    ecam2_lcd.write("LEFT <A");
+    ecam2_lcd.setCursor(14, 1);
+    render_fuel_configuration_value(fuel_kg_per_percent_left);
+    ecam2_lcd.setCursor(10, 2);
+    ecam2_lcd.write("CENTER <B");
+    ecam2_lcd.setCursor(14, 3);
+    render_fuel_configuration_value(fuel_kg_per_percent_center);
+    render_scrollbar(0, 1);
+  } else {
+    ecam2_lcd.setCursor(10, 0);
+    ecam2_lcd.write("CENTER <A");
+    ecam2_lcd.setCursor(14, 1);
+    render_fuel_configuration_value(fuel_kg_per_percent_center);
+    ecam2_lcd.setCursor(11, 2);
+    ecam2_lcd.write("RIGHT <B");
+    ecam2_lcd.setCursor(14, 3);
+    render_fuel_configuration_value(fuel_kg_per_percent_right);
+    render_scrollbar(1, 0);
+  }
+}
+
+
+void render_fuel_configuration_value(char *value) {
+  for (int i = 0; i < FUEL_CONFIGURATION_SIZE; i++) {
+    ecam2_lcd.write(value[i]);
+  }
+}
+
+
+void render_scrollbar(int up, int down) {
+  if (up) {
+    ecam2_lcd.setCursor(19, 0);
+    ecam2_lcd.write(SCROLL_UP_GLYPH);
+  }
+  if (down) {
+    ecam2_lcd.setCursor(19, 3);
+    ecam2_lcd.write(SCROLL_DOWN_GLYPH);
+  }
+}
+
+
+
+void render_fuel_value(unsigned long value, unsigned long kg_per_percent) {
+  unsigned long valueInKg;
+  unsigned long valueInTons;
+  unsigned long decimals;
+  switch (fuel_unit) {
+
+    case Percent:
+        if (value < 100) {
+          ecam2_lcd.write(" ");
+          if (value < 10) {
+            ecam2_lcd.write(" ");
+          }
+        }
+        ecam2_lcd.print(value);
+        ecam2_lcd.write("%");
+      break;
+
+    case Tons:
+      if (kg_per_percent > 0) {
+        valueInKg = value * kg_per_percent;
+        if (valueInKg < 1000) {
+          // .123
+          ecam2_lcd.write(".");
+          if (valueInKg < 100) {
+            ecam2_lcd.write("0");
+            if (valueInKg < 10) {
+              ecam2_lcd.write("0");
+            }
+          }
+          ecam2_lcd.print(valueInKg);
+        } else {
+          valueInTons = valueInKg / 1000;
+          if (valueInTons < 10) {
+            // 1.23
+            ecam2_lcd.print(valueInTons);
+            ecam2_lcd.write(".");
+            decimals = (valueInKg % 1000) / 10;
+            if (decimals < 10) {
+              ecam2_lcd.write("0");
+            }
+            ecam2_lcd.print(decimals);
+          } else if (valueInTons < 100)  {
+            // 12.3
+            ecam2_lcd.print(valueInTons);
+            ecam2_lcd.write(".");
+            decimals = (valueInKg % 1000) / 100;
+            ecam2_lcd.print(decimals);
+          } else {
+            // 123
+            ecam2_lcd.write(" ");
+            ecam2_lcd.print(valueInTons);
+          }
+        }
+      } else {
+        ecam2_lcd.write("????");
+      }
+      break;
+  }
+}
+
+
+void render_x_feed_valve() {
+  if (x_feed_valve[0] == '1') {
+    ecam2_lcd.write(X_FEED_VALVE_OPEN_GLYPH);
+  } else {
+    ecam2_lcd.write(X_FEED_VALVE_CLOSED_GLYPH);
+  }
+}
+
+
+void toggle_fuel_unit() {
+  switch (fuel_unit) {
+    case Percent:
+      fuel_unit = Tons;
+      break;
+
+    case Tons:
+      fuel_unit = Percent;
+      break;
+  }
+  fuel_updated = 1;
+}
+
+
+void configure_fuel_with_input(int index) {
+  if (is_number_string(fuel_configuration_input, FUEL_CONFIGURATION_SIZE, 0)) {
+    char *value_to_configure;
+    if (fuel_configuration_clip_position == 0) {
+      value_to_configure = index == 0 ? fuel_kg_per_percent_left : fuel_kg_per_percent_center;
+    } else {
+      value_to_configure = index == 0 ? fuel_kg_per_percent_center : fuel_kg_per_percent_right;
+    }
+    for (int i = 0; i < FUEL_CONFIGURATION_SIZE; i++) {
+      value_to_configure[i] = fuel_configuration_input[i];
+    }
+    clear_fuel_configuration_ipnut();
+  }
+}
+
+
+void clear_fuel_configuration_ipnut() {
+  for (int i = 0; i < FUEL_CONFIGURATION_SIZE; i++) {
+    fuel_configuration_input[i] = '_';
+  }
+  fuel_configuration_input_position = 0;
+  fuel_updated = 1;
 }
 
 

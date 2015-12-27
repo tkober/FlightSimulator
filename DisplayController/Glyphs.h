@@ -33,10 +33,12 @@ extern byte FRAME_UPPER_RIGHT[8];
 extern byte FRAME_UPPER_LEFT[8];
 extern byte FRAME_BOTTOM_RIGHT[8];
 extern byte FRAME_BOTTOM_LEFT[8];
-extern byte FRAME_BOTTOM[8];
-extern byte FRAME_LEFT[8];
-extern byte FRAME_TOP[8];
-extern byte FRAME_RIGHT[8];
+extern byte FRAME_VERTICAL[8];
+extern byte FRAME_HORIZONTAL[8];
+
+extern byte X_FEED_VALVE_OPEN[8];
+extern byte X_FEED_VALVE_CLOSED[8];
+
 
 extern byte THRUST_LEVERS_POSITION_0[8];
 extern byte THRUST_LEVERS_POSITION_1[8];
@@ -46,3 +48,8 @@ extern byte THRUST_LEVERS_POSITION_4[8];
 extern byte THRUST_LEVERS_POSITION_5[8];
 extern byte THRUST_LEVERS_POSITION_6[8];
 extern byte THRUST_LEVERS_POSITION_7[8];
+
+extern byte PLACEHOLDER[8];
+
+extern byte SCROLL_UP[8];
+extern byte SCROLL_DOWN[8];

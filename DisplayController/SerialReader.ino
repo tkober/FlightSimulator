@@ -305,6 +305,18 @@ void determine_indication_sys1_parameter(char token) {
       token_processing = READ_THROTTLE_POSITION_2;
       break;
 
+    case FUEL_LEFT_EXTRACTION:
+      token_processing = READ_LEFT_FUEL;
+      break;
+
+    case FUEL_CENTER_EXTRACTION:
+      token_processing = READ_CENTRAL_FUEL;
+      break;
+
+    case FUEL_RIGHT_EXTRACTION:
+      token_processing = READ_RIGHT_FUEL;
+      break;
+
     default:
       token_processing = determine_extraction_type;
       determine_extraction_type(token);
@@ -354,6 +366,10 @@ void determine_sys2_other_parameter(char token) {
 
     case FUEL_FLOW_ENGINE_2:
       token_processing = READ_FUEL_FLOW_ENGINE_2;
+      break;
+
+    case X_FEED_VALVE_EXTRACTION:
+      token_processing = READ_X_FEED_VALVE;
       break;
 
     default:
