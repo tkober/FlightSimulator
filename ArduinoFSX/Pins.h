@@ -233,6 +233,9 @@
 #define FLAPS_SWITCH_PIN_A            20
 #define FLAPS_SWITCH_PIN_B            21
 
+// Reeset Elevator
+#define RESET_ELEVATOR_PIN            6
+
 // Arm Spoilers
 #define ARM_SPOILERS_PIN              5
 

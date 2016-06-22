@@ -1,7 +1,7 @@
 #include "SerialReader.h"
 
-#define CONTROLLER_A    // ECAM/FMC, RADIO, GEAR
-//#define CONTROLLER_B    // AP, Flight Controls
+//#define CONTROLLER_A    // ECAM/FMC, RADIO, GEAR
+#define CONTROLLER_B    // AP, Flight Controls
 //#define CONTROLLER_C    // PFD
 
 
