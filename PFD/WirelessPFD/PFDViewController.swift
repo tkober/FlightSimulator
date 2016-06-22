@@ -174,6 +174,15 @@ class PFDViewController: UIViewController {
     
     @IBOutlet weak var airspeedLabel: UILabel?
     
+    @IBOutlet weak var airspeedScale: AirspeedScaleView?
+    
+    private var _airspeed: UInt = 0
+    
+    private func updateAirspeed() {
+        self.airspeedLabel?.text = "\(self._airspeed)"
+        airspeedScale?.setAirspeed(self._airspeed)
+    }
+    
     
     // MARK: | Views Lifecyle
     
@@ -182,7 +191,15 @@ class PFDViewController: UIViewController {
         self.adiContainer?.backgroundColor = UIColor.clearColor()
         self.hideILS(false)
         self.hideGroundClearance(false)
-        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: "toggleILSVisibility"))
+        self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleILSVisibility)))
+        
+        
+        self.handlePFDValue(PFDValue.Airspeed(value: 150))
+        self.handlePFDValue(PFDValue.GroundClearance(value: 2000))
+        self.handlePFDValue(PFDValue.Altitude(value: 3000))
+        self.handlePFDValue(PFDValue.Pitch(value: 3))
+        self.handlePFDValue(PFDValue.Roll(value: 2))
+        
     }
 
     override func didReceiveMemoryWarning() {
@@ -251,7 +268,8 @@ extension PFDViewController: PFDValueHandler {
         switch value {
             
         case .Airspeed(let airspeed):
-            self.airspeedLabel?.text = "\(airspeed)"
+            self._airspeed = airspeed
+            self.updateAirspeed()
             break
             
         case .Altitude(let altitude):
@@ -335,9 +353,6 @@ extension PFDViewController: PFDValueHandler {
             
         case .Unknown:
             break
-            
-            
-        default: break
         }
     }
 }
