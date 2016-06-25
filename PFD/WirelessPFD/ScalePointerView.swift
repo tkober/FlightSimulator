@@ -14,6 +14,9 @@ import UIKit
     @IBInspectable var borderColor: UIColor = UIColor(colorLiteralRed: 1, green: 1, blue: 1, alpha: 0.7)
     
     
+    @IBInspectable var fillColor: UIColor = UIColor(colorLiteralRed: 0/255.0, green: 0/255.0, blue: 0/255.0, alpha: 1)
+    
+    
     @IBInspectable var borderWidth: CGFloat = 2
     
     
@@ -34,6 +37,7 @@ import UIKit
         
         let context = UIGraphicsGetCurrentContext()
         CGContextSetStrokeColorWithColor(context, self.borderColor.CGColor)
+        CGContextSetFillColorWithColor(context, self.fillColor.CGColor)
         CGContextSetLineWidth(context, self.borderWidth)
         CGContextSetLineCap(context, CGLineCap.Round)
         
@@ -45,8 +49,8 @@ import UIKit
         CGContextAddLineToPoint(context, adjustedRect.width - self.pointerWidth, adjustedRect.height)
         CGContextAddLineToPoint(context, adjustedRect.origin.x, adjustedRect.height)
         CGContextAddLineToPoint(context, adjustedRect.origin.x, adjustedRect.origin.y)
-        
-        CGContextStrokePath(context)
+  
+        CGContextDrawPath(context, CGPathDrawingMode.FillStroke)
     }
 }
 
@@ -61,6 +65,7 @@ import UIKit
         
         let context = UIGraphicsGetCurrentContext()
         CGContextSetStrokeColorWithColor(context, self.borderColor.CGColor)
+        CGContextSetFillColorWithColor(context, self.fillColor.CGColor)
         CGContextSetLineWidth(context, self.borderWidth)
         CGContextSetLineCap(context, CGLineCap.Round)
         
@@ -73,6 +78,6 @@ import UIKit
         CGContextAddLineToPoint(context, adjustedRect.origin.x + self.pointerWidth, (adjustedRect.height - self.pointerHeight) / 2.0)
         CGContextAddLineToPoint(context, adjustedRect.origin.x + self.pointerWidth, adjustedRect.origin.y)
         
-        CGContextStrokePath(context)
+        CGContextDrawPath(context, CGPathDrawingMode.FillStroke)
     }
 }

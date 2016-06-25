@@ -13,7 +13,7 @@ enum PFDValue {
     
     case Airspeed(value: UInt)
     
-    case Altitude(value: Int)
+    case Altitude(value: UInt)
     
     case Heading(value: UInt)
     
@@ -103,7 +103,7 @@ class DataParser: NSObject {
         
         // Altitude 
         0x03: {(string: NSString) -> (PFDValue) in
-            return PFDValue.Altitude(value: (string as NSString).integerValue)
+            return PFDValue.Altitude(value: UInt((string as NSString).integerValue))
         },
         
         // Heading

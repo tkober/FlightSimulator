@@ -22,6 +22,24 @@ let GROUND_CLEARANCE: Int = 2500
 class PFDViewController: UIViewController {
 
     
+    func bla() {
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, Int64(50 * Double(NSEC_PER_MSEC))), dispatch_get_main_queue()) {
+            self._airspeed = min(self._airspeed + 1, 290);
+            self.updateAirspeed()
+            
+            if (self._airspeed > 140) {
+                let pitch = max(self.attitudeIndicatorView.pitch - 0.1, -10)
+                self.attitudeIndicatorView.setPitch(pitch)
+                
+                self._altitude = self._altitude + 2
+                self.updateAltitude()
+            }
+            
+            self.bla()
+        }
+    }
+
+    
     // MARK: - ADI
     
     @IBOutlet weak var attitudeIndicatorView: AttitudeIndicatorView!
@@ -169,6 +187,24 @@ class PFDViewController: UIViewController {
     
     @IBOutlet weak var altitudeTrailingDigitsLabel: UILabel?
     
+    @IBOutlet weak var altitudeScale: AltitudeScaleView?
+    
+    private var _altitude: UInt = 0
+    
+    private func updateAltitude() {
+        let flightLevel = _altitude / 100
+        let flightLevelString: String
+        if flightLevel < 100 {
+            flightLevelString = "\(flightLevel < 10 ? "  " : " ")\(flightLevel)"
+        } else {
+            flightLevelString = "\(flightLevel)"
+        }
+        self.flightLevelLabel?.text = flightLevelString
+        let trailingDigits = _altitude % 100
+        self.altitudeTrailingDigitsLabel?.text = "\(trailingDigits < 10 ? "0" : "")\(trailingDigits)"
+        altitudeScale?.setAltitude(_altitude)
+    }
+    
     
     // MARK: | Airspeed
     
@@ -188,18 +224,11 @@ class PFDViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+//        bla()
         self.adiContainer?.backgroundColor = UIColor.clearColor()
         self.hideILS(false)
         self.hideGroundClearance(false)
         self.view.addGestureRecognizer(UITapGestureRecognizer(target: self, action: #selector(toggleILSVisibility)))
-        
-        
-        self.handlePFDValue(PFDValue.Airspeed(value: 150))
-        self.handlePFDValue(PFDValue.GroundClearance(value: 2000))
-        self.handlePFDValue(PFDValue.Altitude(value: 3000))
-        self.handlePFDValue(PFDValue.Pitch(value: 3))
-        self.handlePFDValue(PFDValue.Roll(value: 2))
-        
     }
 
     override func didReceiveMemoryWarning() {
@@ -273,16 +302,8 @@ extension PFDViewController: PFDValueHandler {
             break
             
         case .Altitude(let altitude):
-            let flightLevel = altitude / 100
-            let flightLevelString: String
-            if flightLevel < 100 {
-                flightLevelString = "\(flightLevel < 10 ? "  " : " ")\(flightLevel)"
-            } else {
-                flightLevelString = "\(flightLevel)"
-            }
-            self.flightLevelLabel?.text = flightLevelString
-            let trailingDigits = altitude % 100
-            self.altitudeTrailingDigitsLabel?.text = "\(trailingDigits < 10 ? "0" : "")\(trailingDigits)"
+            self._altitude = altitude;
+            self.updateAltitude();
             break
             
         case .Heading(let heading):

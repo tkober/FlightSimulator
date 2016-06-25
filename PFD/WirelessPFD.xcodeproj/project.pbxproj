@@ -14,6 +14,7 @@
 		DC4953DE1C16F8A200FE5483 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = DC4953DC1C16F8A200FE5483 /* LaunchScreen.storyboard */; };
 		DC4953E71C16FDD700FE5483 /* AttitudeIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4953E61C16FDD700FE5483 /* AttitudeIndicatorView.swift */; };
 		DC4953EA1C17126400FE5483 /* LevelIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = DC4953E91C17126400FE5483 /* LevelIndicator.swift */; };
+		F14E93141D1DB0FB00F738E9 /* AltitudeScaleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F14E93131D1DB0FB00F738E9 /* AltitudeScaleView.swift */; };
 		F194502E1C18D12E00371671 /* ILSScaleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F194502D1C18D12E00371671 /* ILSScaleView.swift */; };
 		F19450311C18DD3A00371671 /* ADIContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19450301C18DD3A00371671 /* ADIContainerView.swift */; };
 		F19450341C18E16100371671 /* ILSNeedleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F19450331C18E16100371671 /* ILSNeedleView.swift */; };
@@ -35,6 +36,7 @@
 		DC4953DF1C16F8A200FE5483 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		DC4953E61C16FDD700FE5483 /* AttitudeIndicatorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttitudeIndicatorView.swift; sourceTree = "<group>"; };
 		DC4953E91C17126400FE5483 /* LevelIndicator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LevelIndicator.swift; sourceTree = "<group>"; };
+		F14E93131D1DB0FB00F738E9 /* AltitudeScaleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AltitudeScaleView.swift; sourceTree = "<group>"; };
 		F194502D1C18D12E00371671 /* ILSScaleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ILSScaleView.swift; sourceTree = "<group>"; };
 		F19450301C18DD3A00371671 /* ADIContainerView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ADIContainerView.swift; sourceTree = "<group>"; };
 		F19450331C18E16100371671 /* ILSNeedleView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ILSNeedleView.swift; sourceTree = "<group>"; };
@@ -99,6 +101,7 @@
 		DC4953E51C16FD8100FE5483 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				F14E93121D1DB0D800F738E9 /* Altitude */,
 				DC2AA2B01D1AA9B30019BA4B /* Airspeed */,
 				F19450381C19000800371671 /* ScalePointer */,
 				F19450321C18DE2D00371671 /* ILS */,
@@ -106,6 +109,14 @@
 				DC4953E91C17126400FE5483 /* LevelIndicator.swift */,
 			);
 			name = Views;
+			sourceTree = "<group>";
+		};
+		F14E93121D1DB0D800F738E9 /* Altitude */ = {
+			isa = PBXGroup;
+			children = (
+				F14E93131D1DB0FB00F738E9 /* AltitudeScaleView.swift */,
+			);
+			name = Altitude;
 			sourceTree = "<group>";
 		};
 		F189C5CF1C22010B00D1E84C /* PFD */ = {
@@ -217,6 +228,7 @@
 				TargetAttributes = {
 					DC4953CF1C16F8A200FE5483 = {
 						CreatedOnToolsVersion = 7.1.1;
+						DevelopmentTeam = RXZ93YWGK9;
 					};
 				};
 			};
@@ -265,6 +277,7 @@
 				F19450341C18E16100371671 /* ILSNeedleView.swift in Sources */,
 				F194503A1C19001800371671 /* ScalePointerView.swift in Sources */,
 				F194502E1C18D12E00371671 /* ILSScaleView.swift in Sources */,
+				F14E93141D1DB0FB00F738E9 /* AltitudeScaleView.swift in Sources */,
 				DC4953D41C16F8A200FE5483 /* AppDelegate.swift in Sources */,
 				F1F947DF1C20F43500627239 /* DataParser.swift in Sources */,
 				F19450371C18F4B300371671 /* ADIOverlayBackgroundView.swift in Sources */,
@@ -386,7 +399,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = kober.thorsten.WirelessPFD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9fa1d915-6223-4a11-8ff3-b5259cf7717c";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -400,7 +413,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = kober.thorsten.WirelessPFD;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				PROVISIONING_PROFILE = "9fa1d915-6223-4a11-8ff3-b5259cf7717c";
+				PROVISIONING_PROFILE = "";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
