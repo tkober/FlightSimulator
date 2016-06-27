@@ -8,6 +8,14 @@
 
 import UIKit
 
+
+struct TakeOffSpeeds {
+    let v1: UInt
+    let vr: UInt
+    let v2: UInt
+}
+
+
 @IBDesignable class AirspeedScaleView: UIView {
 
     
@@ -44,6 +52,20 @@ import UIKit
     @IBInspectable var areaWidth: CGFloat = 20
     
     
+    @IBInspectable var markerPointerWidth: CGFloat = 12
+    
+    
+    @IBInspectable var markerHeight: CGFloat = 20
+    
+    
+    @IBInspectable var markerColor: UIColor = UIColor.whiteColor()
+    
+    
+    @IBInspectable var markerLabelColor: UIColor = UIColor(colorLiteralRed: 25.0/255.0, green: 25.0/255.0, blue: 25.0/255.0, alpha: 1)
+    
+    
+    @IBInspectable var markerFontSize: CGFloat = 0.8
+    
 
     func setAirspeed(airspeed: UInt) {
         let value = max(0, airspeed)
@@ -52,6 +74,16 @@ import UIKit
     }
     
     private var _airspeed: UInt = 0 {
+        didSet {
+            self.setNeedsDisplay()
+        }
+    }
+    
+    func setTakeOffSpeeds(takeOffSpeeds: TakeOffSpeeds?) {
+        self._takeOffSpeeds = takeOffSpeeds
+    }
+    
+    private var _takeOffSpeeds: TakeOffSpeeds? {
         didSet {
             self.setNeedsDisplay()
         }
@@ -125,12 +157,52 @@ import UIKit
             i += 1
         }
         
-        
         CGContextStrokePath(context)
+        
+        if let speeds = self._takeOffSpeeds {
+            if speeds.v1 == speeds.vr {
+                drawTakeOffSpeedMarker(speeds.v1, label: "V1r", context: context, height: imageHeight, width: imageWidth, steps: steps)
+            } else {
+                drawTakeOffSpeedMarker(speeds.v1, label: "V1", context: context, height: imageHeight, width: imageWidth, steps: steps)
+                drawTakeOffSpeedMarker(speeds.vr, label: "Vr", context: context, height: imageHeight, width: imageWidth, steps: steps)
+            }
+            drawTakeOffSpeedMarker(speeds.v2, label: "V2", context: context, height: imageHeight, width: imageWidth, steps: steps)
+        }
     
         let image = UIGraphicsGetImageFromCurrentImageContext()
         UIGraphicsEndImageContext()
         
         self.scaleImage = image
+    }
+    
+    
+    private func drawTakeOffSpeedMarker(speed: UInt, label: String, context: CGContextRef?, height: CGFloat, width: CGFloat, steps: CGFloat) {
+        let scale = UIScreen.mainScreen().scale
+        let markerWidth = self.notchWidth * scale;
+        let markerHeight = self.markerHeight * scale;
+        let pointerWidth = self.markerPointerWidth * scale;
+        
+        CGContextSetFillColorWithColor(context, self.markerColor.CGColor)
+        CGContextSetStrokeColorWithColor(context, self.markerColor.CGColor)
+        CGContextSetLineWidth(context, 1);
+        
+        let centerY = height - (steps * CGFloat((self.visibleRange / 2) + speed))
+        
+        CGContextMoveToPoint(context, width - markerWidth, centerY);
+        CGContextAddLineToPoint(context, width - markerWidth + pointerWidth, centerY - markerHeight / 2)
+        CGContextAddLineToPoint(context, width, centerY - markerHeight / 2);
+        CGContextAddLineToPoint(context, width, centerY + markerHeight / 2);
+        CGContextAddLineToPoint(context, width - markerWidth + pointerWidth, centerY + markerHeight / 2)
+        CGContextAddLineToPoint(context, width - markerWidth, centerY);
+        
+        CGContextDrawPath(context, CGPathDrawingMode.FillStroke)
+        
+        let labelAttributes: [String: AnyObject] = [
+            NSFontAttributeName: UIFont.boldSystemFontOfSize(markerHeight * self.markerFontSize),
+            NSForegroundColorAttributeName: markerLabelColor,
+        ]
+        
+        let boundingBox = label.sizeWithAttributes(labelAttributes)
+        label.drawAtPoint(CGPoint(x: width - markerWidth + pointerWidth, y: centerY - (boundingBox.height / 2.0)), withAttributes: labelAttributes)
     }
 }
