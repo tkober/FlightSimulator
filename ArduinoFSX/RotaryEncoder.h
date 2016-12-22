@@ -1,6 +1,7 @@
 #ifndef ROTARY_ENCODER_H
 #define ROTARY_ENCODER_H
 
+#include "Bounce2.h"
 
 enum DirectionState {
   Stopped,
@@ -21,8 +22,9 @@ class PushableRotaryEncoder {
 
     void setOnRotateClockwise(RotaryEncoderEventHandler handler);
     void setOnRotateCounterClockwise(RotaryEncoderEventHandler handler);
+    
     void setOnClick(ButtonEventHandler handler);
-    void setClickTicks(int clickTicks);
+    
     void setDebounceFilter(int debounceFilter);
     void setBoostActivationCount(int boostActivationCount);
     void setBoostActivationInterval(int boostActivationInterval);
@@ -35,15 +37,17 @@ class PushableRotaryEncoder {
     int _buttonPin;
     int _pullUp;
     Button _button = Button(_buttonPin, _pullUp);
+    Bounce  debouncerA  = Bounce(); 
+    Bounce  debouncerB  = Bounce(); 
 
     int _oldState;
     unsigned long _lastTime;
     int _boostCount;
 
     DirectionState _directionState;
-    int _debounceFilter;
+    unsigned int _debounceFilter;
     int _boostActivationCount;
-    int _boostActivationInterval;
+    unsigned int _boostActivationInterval;
 
     RotaryEncoderEventHandler _onRotateClockwise;
     RotaryEncoderEventHandler _onRotateCounterClockwise;

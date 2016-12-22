@@ -199,7 +199,6 @@ int get_elevator_trim() {
 
 
 void update_elevator_trim_display() {
-  Serial.println("update_elevator_trim_display()");
   char sign = elevator_trim[0];
   char digit1 = elevator_trim[1];
   char digit2 = elevator_trim[2];

@@ -2,7 +2,7 @@
 
 #include "Prefix.h"
 
-#ifdef CONTROLLER_A
+#ifdef CONTROLLER_C
   #include <SPI.h>
   #include <EEPROM.h>
   #include <boards.h>
