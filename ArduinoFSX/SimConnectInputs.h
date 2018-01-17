@@ -71,6 +71,8 @@
 #define GEAR_UP               "C01"
 #define GEAR_DOWN             "C02"
 #define TOGGLE_PARKING_BRAKE  "C04"
+#define PARKING_BRAKE_OFF     "C040"
+#define PARKING_BRAKE_ON      "C041"
 
 #define TRIM_RUDDER_RIGHT     "C28"
 #define TRIM_RUDDER_LEFT      "C27"

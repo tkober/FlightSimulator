@@ -1,7 +1,7 @@
 #ifndef BUTTON_H
 #define BUTTON_H
 
-typedef void (*ButtonEventHandler)();
+typedef void (*ButtonEventHandler)(int buttonId);
 
 
 typedef enum {
@@ -12,24 +12,28 @@ typedef enum {
 
 
 class Button {
-  
+
   public:
     Button(int pin, int pullUp);
-  
+
     void setOnClick(ButtonEventHandler handler);
     void setClickTicks(int clickTicks);
-    
+
+    void setId(int id);
+    int getId();
+
     void tick();
-  
+
   private:
     int _pin;
     int _isPullUp;
+    int _id;
     ButtonState _state;
-    
+
     int _clickTicks;
-    
+
     ButtonEventHandler _onClick;
-    
+
     unsigned long _startedTime;
 };
 

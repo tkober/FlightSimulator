@@ -84,97 +84,27 @@ extern void store_token(char token, char destination[], int size, int *updated);
 #define READ_RIGHT_FUEL               DEFAULT_TOKEN_PROCESSING
 #define READ_X_FEED_VALVE             DEFAULT_TOKEN_PROCESSING
 
+////////////////////////////////////////////////////////////////////////////////
 
+// Radio Panel
+#define READ_COM1_FREQ                DEFAULT_TOKEN_PROCESSING
+#define READ_COM1_SB_FREQ             DEFAULT_TOKEN_PROCESSING
+#define READ_COM2_FREQ                DEFAULT_TOKEN_PROCESSING
+#define READ_COM2_SB_FREQ             DEFAULT_TOKEN_PROCESSING
+#define READ_NAV1_FREQ                DEFAULT_TOKEN_PROCESSING
+#define READ_NAV1_SB_FREQ             DEFAULT_TOKEN_PROCESSING
+#define READ_NAV2_FREQ                DEFAULT_TOKEN_PROCESSING
+#define READ_NAV2_SB_FREQ             DEFAULT_TOKEN_PROCESSING
+#define READ_TRANSPONDER_CODE         DEFAULT_TOKEN_PROCESSING
+#define READ_COM1_SOUND_ACTIVE        DEFAULT_TOKEN_PROCESSING
+#define READ_COM2_SOUND_ACTIVE        DEFAULT_TOKEN_PROCESSING
+#define READ_NAV1_SOUND_ACTIVE        DEFAULT_TOKEN_PROCESSING
+#define READ_NAV2_SOUND_ACTIVE        DEFAULT_TOKEN_PROCESSING
 
-#ifdef CONTROLLER_A
-// ECAM 1
-#define READ_ENGINE_1_RPM             read_n1_engine1
-#define READ_ENGINE_2_RPM             read_n1_engine2
-#define READ_THROTTLE_POSITION_1      read_thrust_levers_position_engine1
-#define READ_THROTTLE_POSITION_2      read_thrust_levers_position_engine2
-#define READ_EGT_ENGINE_1             read_egt_engine1
-#define READ_EGT_ENGINE_2             read_egt_engine2
-#define READ_FUEL_FLOW_ENGINE_1       read_fuel_flow_engine1
-#define READ_FUEL_FLOW_ENGINE_2       read_fuel_flow_engine2
-
-// ECAM 2
-#define READ_FLAPS_POSITION           read_flaps_position
-#define READ_SPOILERS_POSITION        read_spoilers_position
-#define READ_SPOILERS_ARMED           read_spoilers_armed
-
-#define READ_LEFT_FUEL                read_fuel_left
-#define READ_CENTRAL_FUEL             read_fuel_center
-#define READ_RIGHT_FUEL               read_fuel_right
-#define READ_X_FEED_VALVE             read_x_feed_valve
-
-// Radio
-#define READ_COM1_FREQ                read_com1_freq
-#define READ_COM1_SB_FREQ             read_com1_sb_freq
-#define READ_COM2_FREQ                read_com2_freq
-#define READ_COM2_SB_FREQ             read_com2_sb_freq
-#define READ_NAV1_FREQ                read_nav1_freq
-#define READ_NAV1_SB_FREQ             read_nav1_sb_freq
-#define READ_NAV2_FREQ                read_nav2_freq
-#define READ_NAV2_SB_FREQ             read_nav2_sb_freq
-#define READ_TRANSPONDER_CODE         read_transponder_code
-#define READ_COM1_SOUND_ACTIVE        read_com1_sound_active
-#define READ_COM2_SOUND_ACTIVE        read_com2_sound_active
-#define READ_NAV1_SOUND_ACTIVE        read_nav1_sound_active
-#define READ_NAV2_SOUND_ACTIVE        read_nav2_sound_active
-
-// Gear
-#define READ_GEAR_POSITION            read_gear_position
+// Gear Panel
 #define READ_GEAR_RETRACTABLE         read_gear_retractable
-#define READ_PARKING_BRAKE_STATUS     read_parking_brake_status
+#define READ_GEAR_POSITION            read_gear_position
 
-#endif
-
-
-#ifdef CONTROLLER_B
-// AP
-#define READ_REFERENCE_SPEED          read_reference_speed
-#define READ_SPEED_HOLD_ACTIVE        read_speed_hold_active
-#define READ_REFERENCE_HEADING        read_reference_heading
-#define READ_HEADING_HOLD_ACTIVE      read_heading_hold_active
-#define READ_COURSE                   read_course
-#define READ_AP_STATUS                read_ap_status
-#define READ_A_THR_STATUS             read_a_thr_status
-#define READ_REFERENCE_ALTITUDE       read_reference_altitude
-#define READ_REFERENCE_VERTICAL_SPEED read_reference_vertical_speed
-#define READ_ALTITUDE_HOLD_ACTIVE     read_altitude_hold_active
-#define READ_APR_HOLD                 read_apr_hold_status
-#define READ_NAV_HOLD                 read_nav_hold_status
-#define READ_GLIDESLOPE_HOLD          read_glideslope_hold_status
-
-// Flight Controls
-#define READ_ELEVATOR_TRIM            read_elevator_trim
-#define READ_RUDDERT_TRIM             read_ruddert_trim
-#define READ_SPOILERS_ARMED           controls_read_spoilers_armed
-
-#endif
-
-
-#ifdef CONTROLLER_C
-
-#define READ_AIRSPEED                 pfd_read_airspeed
-#define READ_GROUND_SPEED             pfd_read_ground_speed
-#define READ_ALTITUDE                 pfd_read_altitude
-#define READ_HEADING                  pfd_read_heading
-#define READ_GROUND_CLEARANCE         pfd_read_ground_clearance
-#define READ_AIRCRAFT_ON_GROUND       pfd_read_aircraft_on_ground
-#define READ_ILS_LOC_OFFSET           pfd_read_ils_loc_offset
-#define READ_ILS_GS_OFFSET            pfd_read_ils_gs_offset
-#define READ_REFERENCE_SPEED          pfd_read_reference_speed
-#define READ_SPEED_HOLD_ACTIVE        pfd_read_speed_hold_active
-#define READ_REFERENCE_ALTITUDE       pfd_read_reference_altitude
-#define READ_ALTITUDE_HOLD_ACTIVE     pfd_read_altitude_hold_active
-#define READ_PITCH                    pfd_read_pitch
-#define READ_ROLL                     pfd_read_roll
-#define READ_ALTIMETER_SETTING        pfd_read_altimeter_setting
-#define READ_OVERSPEED_WARNING        pfd_read_overspeed_warning
-#define READ_STALL_WARNING            pfd_read_stall_warning
-#define READ_G_FORCE                  pfd_read_g_force
-#define READ_ANGLE_OF_ATTACK          pfd_read_angle_of_attack
-#define READ_TOGA                     pfd_read_to_ga_active
-
-#endif
+// Trim Panel
+#define READ_ELEVATOR_TRIM            DEFAULT_TOKEN_PROCESSING
+#define READ_RUDDERT_TRIM             DEFAULT_TOKEN_PROCESSING

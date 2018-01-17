@@ -12,7 +12,7 @@ Button::Button(int pin, int pullUp) {
 }
 
 
-void Button::setOnClick(ButtonEventHandler handler) 
+void Button::setOnClick(ButtonEventHandler handler)
 {
   _onClick = handler;
 }
@@ -21,6 +21,18 @@ void Button::setOnClick(ButtonEventHandler handler)
 void Button::setClickTicks(int clickTicks)
 {
   _clickTicks = clickTicks;
+}
+
+
+void Button::setId(int id)
+{
+  _id = id;
+}
+
+
+int Button::getId()
+{
+  return _id;
 }
 
 
@@ -34,19 +46,19 @@ void Button::tick()
         _startedTime = now;
         _state = ClickStarted;
         break;
-    
+
       case ClickStarted:
         if (_startedTime - now >= _clickTicks) {
           _state = Clicked;
           if (_onClick != NULL) {
-            _onClick();
+            _onClick(_id);
           }
         }
         break;
-    
+
       case Clicked:
         break;
-     } 
+     }
   } else {
    _state =  Normal;
   }

@@ -1,7 +1,6 @@
 #include <LiquidCrystal.h>
 
-extern LiquidCrystal upper_radio_lcd;
-extern LiquidCrystal lower_radio_lcd;
+extern LiquidCrystal radio_lcd;
 
 extern void radio_setup();
 extern void radio_tick();

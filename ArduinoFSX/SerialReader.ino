@@ -1,8 +1,12 @@
 #include "SerialReader.h"
-#include "Radio.h"
+
 #include "Gear.h"
-#include "AP.h"
+#include "Flaps.h"
+#include "Radio.h"
+#include "Trim.h"
+
 #include "Extractions.h"
+
 
 #define BAUD_RATE   115200
 
