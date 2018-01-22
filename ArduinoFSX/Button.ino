@@ -1,13 +1,16 @@
 #include "Button.h"
 
 
-#define DEFAULT_CLICK_TICKS  600
+#define DEFAULT_CLICK_TICKS     600
+#define DEFAULT_REPEAT_INTERVAL 1000
 
 
 Button::Button(int pin, int pullUp) {
   _pin = pin;
   _clickTicks = DEFAULT_CLICK_TICKS;
   _isPullUp = pullUp;
+  _repeat = 0;
+  _repeatInterval = DEFAULT_REPEAT_INTERVAL;
   pinMode(pin, pullUp == 1 ? INPUT_PULLUP : INPUT);
 }
 
@@ -21,6 +24,18 @@ void Button::setOnClick(ButtonEventHandler handler)
 void Button::setClickTicks(int clickTicks)
 {
   _clickTicks = clickTicks;
+}
+
+
+void setRepeatOnHold(int repeat)
+{
+  _repeat = repeat;
+}
+
+
+void setRepeatInterval(int repeatInterval)
+{
+  _repeatInterval = repeatInterval;
 }
 
 
@@ -49,7 +64,12 @@ void Button::tick()
 
       case ClickStarted:
         if (_startedTime - now >= _clickTicks) {
-          _state = Clicked;
+          if (_repeat) {
+            _state = Repeat;
+            _lastRepeat = millis();
+          } else {
+            _state = Clicked;
+          }
           if (_onClick != NULL) {
             _onClick(_id);
           }
@@ -57,6 +77,15 @@ void Button::tick()
         break;
 
       case Clicked:
+        break;
+
+      case Repeat:
+        if (_lastRepeat - now >= _repeatInterval) {
+          _lastRepeat = millis();
+          if (_onClick != NULL) {
+            _onClick(_id);
+          }
+        }
         break;
      }
   } else {

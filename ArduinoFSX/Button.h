@@ -7,7 +7,8 @@ typedef void (*ButtonEventHandler)(int buttonId);
 typedef enum {
   Normal  = 0,
   ClickStarted,
-  Clicked
+  Clicked,
+  Repeat
 } ButtonState;
 
 
@@ -18,6 +19,9 @@ class Button {
 
     void setOnClick(ButtonEventHandler handler);
     void setClickTicks(int clickTicks);
+
+    void setRepeatOnHold(int repeat);
+    void setRepeatInterval(int repeatInterval);
 
     void setId(int id);
     int getId();
@@ -31,10 +35,13 @@ class Button {
     ButtonState _state;
 
     int _clickTicks;
+    int _repeat;
+    int _repeatInterval;
 
     ButtonEventHandler _onClick;
 
     unsigned long _startedTime;
+    unsigned long _lastRepeat;
 };
 
 #endif
