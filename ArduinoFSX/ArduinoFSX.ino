@@ -4,10 +4,11 @@
 #include "SerialReader.h"
 
 // Panels
-#include "Gear.h"
+#include "ParkingBrake.h"
+//#include "Gear.h"
 #include "Flaps.h"
-#include "Radio.h"
-#include "Trim.h"
+//#include "Radio.h"
+//#include "Trim.h"
 
 
 int initialized = 0;
@@ -19,8 +20,8 @@ void setup() {
   parking_brake_setup();
   gear_setup();
   flaps_setup();
-  radio_setup();
-  trim_setup();
+  //radio_setup();
+  //trim_setup();
 }
 
 
@@ -30,6 +31,6 @@ void loop() {
   parking_brake_tick();
   gear_tick();
   flaps_tick();
-  radio_tick();
-  trim_tick();
+  //radio_tick();
+  //trim_tick();
 }

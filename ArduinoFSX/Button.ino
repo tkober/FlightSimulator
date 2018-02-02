@@ -1,7 +1,7 @@
 #include "Button.h"
 
 
-#define DEFAULT_CLICK_TICKS     600
+#define DEFAULT_CLICK_TICKS     100
 #define DEFAULT_REPEAT_INTERVAL 1000
 
 
@@ -27,13 +27,13 @@ void Button::setClickTicks(int clickTicks)
 }
 
 
-void setRepeatOnHold(int repeat)
+void Button::setRepeatOnHold(int repeat)
 {
   _repeat = repeat;
 }
 
 
-void setRepeatInterval(int repeatInterval)
+void Button::setRepeatInterval(int repeatInterval)
 {
   _repeatInterval = repeatInterval;
 }
@@ -63,7 +63,7 @@ void Button::tick()
         break;
 
       case ClickStarted:
-        if (_startedTime - now >= _clickTicks) {
+        if (now - _startedTime >= _clickTicks) {
           if (_repeat) {
             _state = Repeat;
             _lastRepeat = millis();
@@ -80,7 +80,7 @@ void Button::tick()
         break;
 
       case Repeat:
-        if (_lastRepeat - now >= _repeatInterval) {
+        if (now - _lastRepeat >= _repeatInterval) {
           _lastRepeat = millis();
           if (_onClick != NULL) {
             _onClick(_id);

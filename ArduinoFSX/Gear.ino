@@ -27,10 +27,33 @@ void update_gear_leds();
 GearPosition position_for_gear(Gear gear);
 void show_gear_position(GearPosition gearPosition, int retractable, int extended_led, int unlocked_led);
 
-void update_parking_brake_status();
-void toggle_parking_brake_button_clicked();
-void gear_up();
-void gear_down();
+typedef enum {
+  GearLeverPositionUnkown = 0,
+  GearLeverPositionUp,
+  GearLeverPositionDown
+} GearLeverPosition;
+
+typedef struct GearLeverPotiRange {
+  int from;
+  int to;
+  GearLeverPosition position;
+} GearLeverPotiRange;
+
+#define GEAR_LEVER_POTI_RANGE_MAKE(_from, _to, _position)  { _from, _to, _position }
+
+GearLeverPotiRange GEAR_UP_POTI_RANGE   = GEAR_LEVER_POTI_RANGE_MAKE(0, 100, GearLeverPositionUp);
+GearLeverPotiRange GEAR_DOWN_POTI_RANGE = GEAR_LEVER_POTI_RANGE_MAKE(900, 1024, GearLeverPositionDown);
+
+#define GEAR_LEVER_POTI_RANGES 2
+GearLeverPotiRange gear_lever_poti_ranges[GEAR_LEVER_POTI_RANGES];
+
+GearLeverPosition previous_gear_lever_position = GearLeverPositionUnkown;
+long last_gear_lever_update = millis();
+
+#define UPDATE_INTERVAL 2000L
+
+extern GearLeverPosition gearLeverFromPotiValue(int value);
+extern void update_gear_lever(GearLeverPosition position);
 
 
 // Public
@@ -43,6 +66,9 @@ void gear_setup() {
   pinMode(RIGHT_GEAR_EXTENDED_LED_PIN, OUTPUT);
   pinMode(RIGHT_GEAR_UNLOCKED_LED_PIN, OUTPUT);
   update_gear_leds();
+
+  gear_lever_poti_ranges[0] = GEAR_UP_POTI_RANGE;
+  gear_lever_poti_ranges[1] = GEAR_DOWN_POTI_RANGE;
 }
 
 
@@ -50,6 +76,15 @@ void gear_tick() {
   if (gear_updated == 1) {
     update_gear_leds();
     gear_updated = 0;
+  }
+
+  int gear_lever_poti_value = analogRead(GEAR_POTI_PIN);
+  GearLeverPosition gear_lever_position = gearLeverFromPotiValue(gear_lever_poti_value);
+
+  if (gear_lever_position != previous_gear_lever_position || (millis() - last_gear_lever_update > UPDATE_INTERVAL) ) {
+    previous_gear_lever_position = gear_lever_position;
+    update_gear_lever(gear_lever_position);
+    last_gear_lever_update = millis();
   }
 }
 
@@ -112,11 +147,31 @@ void show_gear_position(GearPosition gearPosition, int retractable, int extended
   }
 }
 
-void gear_up() {
-  Serial.println(GEAR_UP);
+
+GearLeverPosition gearLeverFromPotiValue(int value) {
+  for (int i = 0; i < GEAR_LEVER_POTI_RANGES; i++) {
+    GearLeverPotiRange range = gear_lever_poti_ranges[i];
+    if (value >= range.from && value <= range.to) {
+      return range.position;
+    }
+  }
+  return GearLeverPositionUnkown;
 }
 
 
-void gear_down() {
-  Serial.println(GEAR_DOWN);
+void update_gear_lever(GearLeverPosition position) {
+  switch (position) {
+
+    case GearLeverPositionUp:
+      Serial.println(GEAR_UP);
+      break;
+
+    case GearLeverPositionDown:
+      Serial.println(GEAR_DOWN);
+      break;
+
+    default:
+      break;
+
+  }
 }
