@@ -84,9 +84,16 @@ void trim_setup() {
   update_rudder_trim_display();
 
   rudderLeftButton.setOnClick(trim_rudder_left);
+  rudderLeftButton.setRepeatOnHold(1);
+
   rudderRightButton.setOnClick(trim_rudder_right);
+  rudderRightButton.setRepeatOnHold(1);
+
   elevatorUpButton.setOnClick(trim_elevator_up);
+  elevatorUpButton.setRepeatOnHold(1);
+
   elevatorDownButton.setOnClick(trim_elevator_down);
+  elevatorDownButton.setRepeatOnHold(1);
 }
 
 
